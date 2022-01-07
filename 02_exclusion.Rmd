@@ -1,0 +1,495 @@
+---
+title: "Exclusion criteria"
+author: "Lori,Mitchell, Rachel K.Y. Tsui, & Krista Byers-Heinlein"
+date: '`r format(Sys.time(), "%a %b %d %X %Y")`'
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: yes
+---
+
+```{r setup, include=FALSE, cache=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(here)
+library(tidyverse)
+library(tidylog)
+library(matrixStats)
+```
+
+# Intro
+This script documents how we screened the demographic data from the webCDI data and identified those participants to be excluded.
+
+# Read in data
+```{r cache=TRUE}
+clean_demog <- read.csv(here::here("data_keepers/public_clean_demog.csv"))
+```
+
+# Participant info (total)
+```{r cache=TRUE}
+# Number of total participants (after removing incompleted entries, monolinguals, and pilot data)
+clean_demog %>%
+  filter(monolingual != 1) %>%
+  distinct(subject_id) %>%
+  nrow()
+
+# Number of girls and boys
+clean_demog %>%
+  filter(monolingual != 1) %>%
+  select(subject_id, sex) %>%
+  distinct(subject_id, .keep_all = TRUE) %>%
+  dplyr::count(sex)
+```
+
+# Participant info after keeping those where both English and French CDIs were completed
+```{r cache=TRUE}
+# Number of total participants (after removing incompleted entries, monolinguals, and pilot data)
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  distinct(subject_id) %>%
+  nrow()
+
+# Number of girls and boys
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  select(subject_id, sex) %>%
+  distinct(subject_id, .keep_all = TRUE) %>%
+  dplyr::count(sex)
+
+# Number of participants who contributed data more than one time point
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  group_by(subject_id) %>%
+  dplyr::count(subject_id) %>%
+  filter(n > 1) %>%
+  nrow()
+
+# Age range (across all participants and all months)
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  summarize(mean_age = mean(age_months, na.rm=T),
+            sd_age = sd(age_months, na.rm=T),
+            min_age = min(age_months, na.rm=T),
+            max_age = max(age_months, na.rm=T))
+
+# Age range for 1st month data entry
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  filter(n_months == 1) %>%
+  summarize(mean_age = mean(age_months, na.rm=T),
+            sd_age = sd(age_months, na.rm=T),
+            min_age = min(age_months, na.rm=T),
+            max_age = max(age_months, na.rm=T))
+
+# Age range for final month data entry
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  arrange(subject_id, n_months) %>%
+  # get the last row of data within each participant
+  group_by(subject_id) %>%
+  slice(n()) %>%
+  ungroup() %>%
+  # summarize
+  summarize(mean_age = mean(age_months, na.rm=T),
+            sd_age = sd(age_months, na.rm=T),
+            min_age = min(age_months, na.rm=T),
+            max_age = max(age_months, na.rm=T)) # the oldest age is 27m1
+  
+```
+
+# Average language exposure (weighted mean is calculated as participants contributed different number of LEQ update data)
+```{r cache=TRUE}
+# by language
+## minimum and maximum of individual averages
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  select(subject_id, n_months, exposure_eng, exposure_fr, exposure_other) %>%
+  filter(!is.na(exposure_eng)) %>%
+  group_by(subject_id) %>%
+  # averaging within participant
+  summarize(mean_exposure_eng = mean(exposure_eng),
+            mean_exposure_fr = mean(exposure_fr),
+            mean_exposure_other = mean(exposure_other)) %>%
+  ungroup() %>%
+  # minimum and maximum of the individual averages
+  pivot_longer(c(mean_exposure_eng, mean_exposure_fr, mean_exposure_other), names_to = "language", values_to = "mean_exposure") %>%
+  group_by(language) %>%
+  summarize(min_exposure = min(mean_exposure),
+            max_exposure = max(mean_exposure))
+
+## weighted mean across all participants
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  select(subject_id, n_months, exposure_eng, exposure_fr, exposure_other) %>%
+  filter(!is.na(exposure_eng)) %>%
+  group_by(subject_id) %>%
+  mutate(count = n()) %>%
+  ungroup() %>%
+  pivot_longer(c(exposure_eng, exposure_fr, exposure_other), names_to = "language", values_to = "exposure") %>%
+  group_by(language) %>%
+  summarize(mean_exposure = round(weightedMean(exposure, count), 1),
+            sd_exposure = round(weightedSd(exposure, count), 1))
+
+
+# by dominance
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  select(subject_id, n_months, exposure_eng, exposure_fr, exposure_other) %>%
+  filter(!is.na(exposure_eng)) %>%
+  mutate(exposure_dom = if_else(exposure_eng > exposure_fr, exposure_eng, exposure_fr),
+         exposure_nondom = if_else(exposure_eng > exposure_fr, exposure_fr, exposure_eng)) %>%
+  group_by(subject_id) %>%
+  mutate(count = n()) %>%
+  ungroup() %>%
+  pivot_longer(-c(subject_id:exposure_fr, count), names_to = "language", values_to = "exposure") %>%
+  group_by(language) %>%
+  summarize(mean_exposure = round(weightedMean(exposure, count), 1),
+            sd_exposure = round(weightedSd(exposure, count), 1))
+
+
+# Number of English dominant
+## minimum and maximum of individual averages
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  select(subject_id, n_months, exposure_eng, exposure_fr, exposure_other) %>%
+  filter(!is.na(exposure_eng)) %>%
+  group_by(subject_id) %>%
+  # averaging within participant
+  summarize(mean_exposure_eng = mean(exposure_eng),
+            mean_exposure_fr = mean(exposure_fr),
+            mean_exposure_other = mean(exposure_other)) %>%
+  ungroup() %>%
+  # English exposure > French exposure
+  filter(mean_exposure_eng > mean_exposure_fr) %>%
+  # minimum and maximum of the individual averages
+  pivot_longer(c(mean_exposure_eng, mean_exposure_fr, mean_exposure_other), names_to = "language", values_to = "mean_exposure") %>%
+  group_by(language) %>%
+  summarize(number = length(unique(subject_id)),
+            min_exposure = min(mean_exposure),
+            max_exposure = max(mean_exposure))
+
+## weighted mean across all participants
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  select(subject_id, n_months, exposure_eng, exposure_fr, exposure_other) %>%
+  filter(!is.na(exposure_eng)) %>%
+  group_by(subject_id) %>%
+  # averaging within participant to define dominance
+  mutate(count = n(),
+         mean_exposure_eng = mean(exposure_eng),
+         mean_exposure_fr = mean(exposure_fr),
+         mean_exposure_other = mean(exposure_other)) %>%
+  ungroup() %>%
+  filter(mean_exposure_eng > mean_exposure_fr) %>% # English exposure > French exposure
+  select(-c(matches("mean"))) %>%
+  # calculating weigthed mean
+  pivot_longer(c(exposure_eng, exposure_fr, exposure_other), names_to = "language", values_to = "exposure") %>%
+  group_by(language) %>%
+  summarize(number = length(unique(subject_id)),
+            mean_exposure = round(weightedMean(exposure, count), 1),
+            sd_exposure = round(weightedSd(exposure, count), 1))
+
+
+# Number of French dominant
+## minimum and maximum of individual averages
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  select(subject_id, n_months, exposure_eng, exposure_fr, exposure_other) %>%
+  filter(!is.na(exposure_eng)) %>%
+  group_by(subject_id) %>%
+  # averaging within participant
+  summarize(mean_exposure_eng = mean(exposure_eng),
+            mean_exposure_fr = mean(exposure_fr),
+            mean_exposure_other = mean(exposure_other)) %>%
+  ungroup() %>%
+  # English exposure < French exposure
+  filter(mean_exposure_eng < mean_exposure_fr) %>%
+  # minimum and maximum of the individual averages
+  pivot_longer(c(mean_exposure_eng, mean_exposure_fr, mean_exposure_other), names_to = "language", values_to = "mean_exposure") %>%
+  group_by(language) %>%
+  summarize(number = length(unique(subject_id)),
+            min_exposure = min(mean_exposure),
+            max_exposure = max(mean_exposure))
+
+## weighted mean across all participants
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  select(subject_id, n_months, exposure_eng, exposure_fr, exposure_other) %>%
+  filter(!is.na(exposure_eng)) %>%
+  group_by(subject_id) %>%
+  # averaging within participant to define dominance
+  mutate(count = n(),
+         mean_exposure_eng = mean(exposure_eng),
+         mean_exposure_fr = mean(exposure_fr),
+         mean_exposure_other = mean(exposure_other)) %>%
+  ungroup() %>%
+  filter(mean_exposure_eng < mean_exposure_fr) %>% # English exposure < French exposure
+  select(-c(matches("mean"))) %>%
+  # calculating weigthed mean
+  pivot_longer(c(exposure_eng, exposure_fr, exposure_other), names_to = "language", values_to = "exposure") %>%
+  group_by(language) %>%
+  summarize(number = length(unique(subject_id)),
+            mean_exposure = round(weightedMean(exposure, count), 1),
+            sd_exposure = round(weightedSd(exposure, count), 1))
+
+
+# Number of equal exposure to English and French
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  select(subject_id, n_months, exposure_eng, exposure_fr, exposure_other) %>%
+  filter(!is.na(exposure_eng)) %>%
+  group_by(subject_id) %>%
+  # averaging within participant
+  summarize(mean_exposure_eng = mean(exposure_eng),
+            mean_exposure_fr = mean(exposure_fr),
+            mean_exposure_other = mean(exposure_other)) %>%
+  ungroup() %>%
+  # English exposure = French exposure
+  filter(mean_exposure_eng == mean_exposure_fr) %>%
+  # count how many 
+  nrow()
+```
+
+# Maternal education level in years
+```{r cache=TRUE}
+clean_demog %>% 
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  select(subject_id, primary_caregiver_eng, primary_caregiver_education_eng) %>% # keeping "primary_caregiver_education_eng" because all listed mother as the primary caregiver
+  distinct(subject_id, .keep_all = TRUE) %>%
+  group_by(primary_caregiver_eng) %>%
+  summarize(mean_edu_level = mean(primary_caregiver_education_eng, na.rm=T),
+            sd_edu_level = sd(primary_caregiver_education_eng, na.rm=T),
+            min_edu_level = min(primary_caregiver_education_eng, na.rm=T),
+            max_edu_level = max(primary_caregiver_education_eng, na.rm=T))
+  
+# how many mothers completed a university degree or higher (years 16 = university graduate, > 16 = advanced degree)
+clean_demog %>% 
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  select(subject_id, primary_caregiver_eng, primary_caregiver_education_eng) %>% # keeping "primary_caregiver_education_eng" because all listed mother as the primary caregiver
+  distinct(subject_id, .keep_all = TRUE) %>%
+  # university graduate? (1 = yes, 0 = no)
+  mutate(university_degree = if_else(primary_caregiver_education_eng >= 16, 1, 0)) %>%
+  # summary
+  dplyr::count(university_degree) %>%
+  summarize(university_degree = university_degree,
+            n = n, 
+            percentage = n/sum(n)*100)
+
+```
+
+
+# Who filled out the forms
+```{r cache=TRUE}
+# English CDIs
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  select(subject_id, n_months, form_filler_eng) %>%
+  filter(!is.na(form_filler_eng)) %>%
+  dplyr::count(form_filler_eng) %>%
+  summarize(form_filler_eng = form_filler_eng,
+            n = n,
+            percentage = n/sum(n)*100)
+
+# French CDIs
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  select(subject_id, n_months, form_filler_fr) %>%
+  filter(!is.na(form_filler_fr)) %>%
+  dplyr::count(form_filler_fr) %>%
+  summarize(form_filler_fr = form_filler_fr,
+            n = n,
+            percentage = n/sum(n)*100)
+
+# How often the forms in each language at each administration were filled out by the same parent?
+## English CDIs
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  select(subject_id, n_months, form_filler_eng) %>%
+  #pivot_longer(form_filler_eng:form_filler_fr, names_to = "form_language", values_to = "filler") %>%
+  pivot_wider(names_from = n_months, values_from = form_filler_eng) %>%
+  # check row-wise and see if all values are identical
+  rowwise %>%
+  mutate(n_formfiller = as.factor(n_distinct(unlist(select(cur_data(), 2:11)), na.rm = TRUE))) %>% # if all consistent, then it'll return 1; otherwise the value would be > 1 indicating more than one form filler identity
+  ungroup() %>%
+  # summary
+  dplyr::count(n_formfiller) %>%
+  summarize(n_formfiller = n_formfiller,
+            n = n,
+            percentage = n/sum(n)*100)
+
+# French CDIs
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  select(subject_id, n_months, form_filler_fr) %>%
+  #pivot_longer(form_filler_eng:form_filler_fr, names_to = "form_language", values_to = "filler") %>%
+  pivot_wider(names_from = n_months, values_from = form_filler_fr) %>%
+  # check row-wise and see if all values are identical
+  rowwise %>%
+  mutate(n_formfiller = as.factor(n_distinct(unlist(select(cur_data(), 2:11)), na.rm = TRUE))) %>% # if all consistent, then it'll return 1; otherwise the value would be > 1 indicating more than one form filler identity
+  ungroup() %>%
+  # summary
+  dplyr::count(n_formfiller) %>%
+  summarize(n_formfiller = n_formfiller,
+            n = n,
+            percentage = n/sum(n)*100)
+
+```
+
+# Primary caregiver in each language
+```{r cache=TRUE}
+# English CDIs
+## percentage of whom is the primary caregiver in English
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  filter(!is.na(completed_eng)) %>%
+  select(subject_id, primary_caregiver_eng) %>%
+  dplyr::count(primary_caregiver_eng) %>%
+  summarize(primary_caregiver_eng = primary_caregiver_eng,
+            n = n,
+            percentage = n/sum(n)*100)
+
+# French CDIs
+## percentage of whom is the primary caregiver in French
+clean_demog %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  filter(!is.na(completed_fr)) %>%
+  select(subject_id, primary_caregiver_fr) %>%
+  dplyr::count(primary_caregiver_fr) %>%
+  summarize(primary_caregiver_fr = primary_caregiver_fr,
+            n = n,
+            percentage = n/sum(n)*100)
+```
+
+# Number of completed CDIs in each language
+```{r cache=TRUE}
+# Total number of completed CDIs
+## Completed English CDIs
+clean_demog  %>%
+  filter(monolingual != 1) %>%
+  select(c(subject_id, n_months, completed_eng)) %>%
+  group_by(subject_id) %>%
+  filter(!is.na(completed_eng)) %>%
+  nrow()
+  
+## Completed French CDIs
+clean_demog  %>%
+  filter(monolingual != 1) %>%
+  select(c(subject_id, n_months, completed_fr)) %>%
+  group_by(subject_id) %>%
+  filter(!is.na(completed_fr)) %>%
+  nrow()
+
+## Completed both English and French CDIs
+clean_demog %>%
+  filter(monolingual != 1) %>%
+  select(c(subject_id, n_months, completed_both)) %>%
+  group_by(subject_id) %>%
+  filter(completed_both == TRUE) %>%
+  nrow()
+
+  
+# Average number of completed CDIs
+## English entries
+clean_demog  %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  group_by(subject_id) %>%
+  dplyr::count(completed_eng) %>%
+  filter(!is.na(completed_eng)) %>%
+  ungroup()%>%
+  summarize(mean_entry_eng = mean(n, na.rm=T),
+            sd_entry_eng = sd(n, na.rm=T),
+            min_entry_eng = min(n, na.rm=T),
+            max_entry_eng = max(n, na.rm=T))
+            
+## French entries
+clean_demog  %>%
+  filter(monolingual != 1 & !is.na(completed_both)) %>%
+  group_by(subject_id) %>%
+  dplyr::count(completed_fr) %>%
+  filter(!is.na(completed_fr)) %>%
+  ungroup()%>%
+  summarize(mean_entry_fr = mean(n, na.rm=T),
+            sd_entry_fr = sd(n, na.rm=T),
+            min_entry_fr = min(n, na.rm=T),
+            max_entry_fr = max(n, na.rm=T))
+```
+
+
+# Exclusion criteria
+```{r cache=TRUE}
+# Monolingual?
+clean_demog %>%
+  select(subject_id, monolingual) %>%
+  distinct(subject_id, .keep_all = TRUE) %>%
+  filter(monolingual == 1) # returns 6
+
+# Preterm?
+clean_demog %>%
+  select(subject_id, preterm) %>%
+  distinct(subject_id, .keep_all = TRUE) %>%
+  filter(preterm == 1) # returns 0
+
+# Underweight?
+clean_demog %>%
+  select(subject_id, underweight) %>%
+  distinct(subject_id, .keep_all = TRUE) %>%
+  filter(underweight == 1) # returns 2
+
+# Ear infection?
+clean_demog %>%
+  select(subject_id, ear_infections_problem, ear_infections_reason) %>%
+  distinct(subject_id, .keep_all = TRUE) %>%
+  filter(ear_infections_problem == 1) # returns 0
+
+# Hearing loss?
+clean_demog %>%
+  select(subject_id, hearing_loss_problem, hearing_loss_reason) %>%
+  distinct(subject_id, .keep_all = TRUE) %>%
+  filter(hearing_loss_problem == 1) # returns 1; we could still include this data for now
+
+# Vision problem?
+clean_demog %>%
+  select(subject_id, vision_problem, vision_reason) %>%
+  distinct(subject_id, .keep_all = TRUE) %>%
+  filter(vision_problem == 1) # returns 2; we could still include the data for now
+
+# Illness?
+clean_demog %>%
+  select(subject_id, illnesses_problem, illnesses_reason) %>%
+  distinct(subject_id, .keep_all = TRUE) %>%
+  filter(illnesses_problem == 1) # returns 3; OK to include the data
+
+# Service?
+clean_demog %>%
+  select(subject_id, services_problem, services_reason) %>%
+  distinct(subject_id, .keep_all = TRUE) %>%
+  filter(services_problem == 1) # returns 0
+
+# Worried?
+clean_demog %>%
+  select(subject_id, worried_problem, worried_reason) %>%
+  distinct(subject_id, .keep_all = TRUE) %>%
+  filter(worried_problem == 1) # returns 3
+
+# Learning disability
+clean_demog %>%
+  select(subject_id, learning_disability_problem, learning_disability_reason) %>%
+  distinct(subject_id, .keep_all = TRUE) %>%
+  filter(learning_disability_problem == 1) # returns 12; OK to include the data
+
+```
+
+
+# Create a list of participants to be excluded
+## (for now & Lori's thesis, we only care about language group: exclude monolinguals. We are ignoring the other criteria in this script, because--after checking--no infants should be excluded based on health criteria)
+```{r cache=TRUE}
+exclusions <- clean_demog %>%
+  filter(monolingual == 1 | # exclude mono
+           preterm == 1 | # exclude preterm
+           underweight == 1) %>%  # exclude underweight
+  distinct(subject_id)
+
+write.csv(exclusions, here("data_keepers/exclusions.csv"), row.names=F)
+
+```
