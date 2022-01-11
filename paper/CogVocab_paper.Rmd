@@ -48,7 +48,7 @@ footnotelist      : no
 lineno            : yes
 mask              : no # "yes" to omit identifying information from the title page
 
-#bibliography      : ["CogVocab_paper_references.bib"]
+bibliography      : ["CogVocab_paper_references.bib"]
 replace_ampersands: yes
 
 class             : "man"
@@ -946,3 +946,13 @@ An important avenue for future research would be to examine whether the same cog
 
 # Conclusion
 The present study demonstrated thatEnglish-French bilingual infants’ show an advantage for cognates in vocabulary production, with proportionally more cognates being produced than non-cognates, a pattern which magnified as the infants grew older and learned more vocabulary. This finding can, at least in part, explain why children learning typologically similar languages show faster vocabulary growth than those learning more distant languages (Blom et al., 2020; Gampe et al., 2021; Sheng et al., 2016). Altogether, our study provides a greater understanding of the effect of similar-sounding words on infants’ language acquisition over time. Future studies with data from other populations of bilinguals will be important to more fully understand the effect of the cognate advantage in early bilingual vocabulary development. 
+
+\newpage
+
+# References
+
+\begingroup
+\setlength{\parindent}{-0.5in}
+
+<div id = "refs"></div>
+\endgroup

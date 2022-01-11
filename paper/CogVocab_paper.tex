@@ -139,6 +139,26 @@
 \ifluatex
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
+  % set entry spacing
+  \ifnum #2 > 0
+  \setlength{\parskip}{#2\baselineskip}
+  \fi
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 \title{Cognates are advantaged in early bilingual expressive vocabulary development}
 \author{Lori Mitchell\textsuperscript{1}, Rachel Ka-Ying Tsui\textsuperscript{1}, \& Krista Byers-Heinlein\textsuperscript{1}}
@@ -378,6 +398,161 @@ An important avenue for future research would be to examine whether the same cog
 \section{Conclusion}\label{conclusion}}
 
 The present study demonstrated thatEnglish-French bilingual infants' show an advantage for cognates in vocabulary production, with proportionally more cognates being produced than non-cognates, a pattern which magnified as the infants grew older and learned more vocabulary. This finding can, at least in part, explain why children learning typologically similar languages show faster vocabulary growth than those learning more distant languages (Blom et al., 2020; Gampe et al., 2021; Sheng et al., 2016). Altogether, our study provides a greater understanding of the effect of similar-sounding words on infants' language acquisition over time. Future studies with data from other populations of bilinguals will be important to more fully understand the effect of the cognate advantage in early bilingual vocabulary development.
+
+\newpage
+
+\hypertarget{references}{%
+\section{References}\label{references}}
+
+\begingroup
+\setlength{\parindent}{-0.5in}
+
+\hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
+\leavevmode\hypertarget{ref-Bates_etal_2015}{}%
+Bates, M., D., \& Walker, S. (2015). Fitting linear mixed-effects models using lme4. \emph{Journal of Statistical Software}, \emph{67}(1), 1--48. \url{https://doi.org/10.18637/jss.v067.i01}
+
+\leavevmode\hypertarget{ref-Bilson_etal_2015}{}%
+Bilson, S., Yoshida, H., Tran, C. D., Woods, E. A., \& Hills, T. T. (2015). Semantic facilitation in bilingual first language acquisition. \emph{Cognition}, \emph{140}, 122--134. \url{https://doi.org/10.1016/j.cognition.2015.03.013}
+
+\leavevmode\hypertarget{ref-Blom_etal_2019}{}%
+Blom, B., E., \& Timmermeister, M. (2019). Cross-language distance influences receptive vocabulary outcomes of bilingual children. \emph{First Language}, \emph{40}(2), 151--171. \url{https://doi.org/10.1177/0142723719892794}
+
+\leavevmode\hypertarget{ref-Bosch_Ramon-Casas_2014}{}%
+Bosch, L., \& Ramon-Casas, M. (2014). First translation equivalents in bilingual toddlers' expressive vocabulary: Does form similarity matter? \emph{International Journal of Behavioral Development}, \emph{38}(4), 317--322. \url{https://doi.org/10.1177/0165025414532559}
+
+\leavevmode\hypertarget{ref-Bosch_Sebastian-Galles_2001}{}%
+Bosch, L., \& Sebastián-Gallés, N. (2001). Evidence of early language discrimination abilities in infants from bilingual environments. \emph{Infancy}, \emph{21}(1), 29--49. \url{https://doi.org/10.1207/S15327078IN0201_3}
+
+\leavevmode\hypertarget{ref-Byers-Heinlein_etal_2020}{}%
+Byers-Heinlein, K., Schott, E., Gonzalez-Barrero, A. M., Brouillard, M., Dubé, D., Jardak, A., \ldots{} Tamayo, M. P. (2020). MAPLE: A multilingual approach to parent language estimates. \emph{Bilingualism: Language and Cognition}, \emph{23}(5), 951--957. \url{https://doi.org/10.1017/S1366728919000282}
+
+\leavevmode\hypertarget{ref-Caselli_etal_1995}{}%
+Caselli, B., M. C., \& Weir, J. (1995). A cross-linguistic study of early lexical development. \emph{Cognitive Development}, \emph{10}(2), 159--199. \url{https://doi.org/10.1016/0885-2014(95)90008-x}
+
+\leavevmode\hypertarget{ref-Choi_2019}{}%
+Choi, H. (2019). Strategy training for {E}nglish-{F}rench cognate awareness: Contributions to {K}orean learners' L3 {F}rench competency. \emph{Electronic Journal of Foreign Language Teaching}, \emph{16}(1), 68--79. Retrieved from \url{https://e-flt.nus.edu.sg/wp-content/uploads/2020/09/choi.pdf}
+
+\leavevmode\hypertarget{ref-Cody_Aslin_2003}{}%
+Coady, J. A., \& Aslin, R. N. (2003). Phonological neighbourhoods in the developing lexicon. \emph{Journal of Child Language}, \emph{30}(2), 441--469. \url{https://doi.org/10.1017/S0305000903005579}
+
+\leavevmode\hypertarget{ref-Costa_etal_2000}{}%
+Costa, C., A., \& Sebastian-Galles, N. (2000). The cognate facilitation effect: Implications for models of lexical access. \emph{Journal of Experimental Psychology: Learning, Memory, and Cognition}, \emph{26}(5), 1283--1296. \url{https://doi.org/10.1037/0278-7393.26.5.1283}
+
+\leavevmode\hypertarget{ref-DeAnda_Friend_2020}{}%
+De Anda, S., \& Friend, M. (2020). Lexical-semantic development in bilingual toddlers at 18 and 24 months. \emph{Frontiers in Psychology}, \emph{11}, 3500. \url{https://doi.org/10.3389/fpsyg.2020.508363}
+
+\leavevmode\hypertarget{ref-DeHouwer_etal_2006}{}%
+De Houwer, A., Bornstein, M. H., \& De Coster, S. (2006). Early understanding of two words for the same thing: A {CDI} study of lexical comprehension in infant bilinguals. \emph{International Journal of Bilingualism}, \emph{10}(3), 331--347. \url{https://doi.org/10.1177/13670069060100030401}
+
+\leavevmode\hypertarget{ref-Demke_etal_2002}{}%
+Demke, G., T. L., \& Siakaluk, P. D. (2002). The influence of exposure to phonological neighbours on preschoolers' novel word production. \emph{Journal of Child Language}, \emph{29}(2), 379--392. \url{https://doi.org/10.1017/S0305000902005081}
+
+\leavevmode\hypertarget{ref-Fenson_etal_2007}{}%
+Fenson, L., Marchman, V. A., Thal, D. J., Dale, P. S., Reznick, J. S., \& Bates, E. (2007). \emph{MacArthur-{B}ates {C}ommunicative {D}evelopment {I}nventories (CDIs)} (2nd ed.). Baltimore, MD: Brookes Publishing.
+
+\leavevmode\hypertarget{ref-Floccia_etal_2020}{}%
+Floccia, C., Luche, C. D., Lepadatu, I., Chow, J., Ratnage, P., \& Plunkett, K. (2020). Translation equivalent and cross-language semantic priming in bilingual toddlers. \emph{Journal of Memory and Language}, \emph{112}, 104086. \url{https://doi.org/10.1016/j.jml.2019.104086}
+
+\leavevmode\hypertarget{ref-Frank_etal_2017}{}%
+Frank, M. C., Braginsky, M., Yurovsky, D., \& Marchman, V. A. (2017). Wordbank: An open repository for developmental vocabulary data. \emph{Journal of Child Language}, \emph{44}(3), 677--694. \url{https://doi.org/10.1017/S0305000916000209}
+
+\leavevmode\hypertarget{ref-Gampe_etal_2021}{}%
+Gampe, Q., A., \& Daum, M. M. (2021). Does linguistic similarity affect early simultaneous bilingual language acquisition? \emph{Journal of Language Contact}, \emph{13}(3), 482--500. \url{https://doi.org/10.1163/19552629-13030001}
+
+\leavevmode\hypertarget{ref-Gonzalez-Barrero_2020}{}%
+Gonzalez-Barrero, A. M., Schott, E., \& Byers-Heinlein, K. (2020). \emph{Bilingual adjusted vocabulary: A developmentally-informed bilingual vocabulary measure}. Preprint. Retrieved from \url{https://psyarxiv.com/x7s4u/}
+
+\leavevmode\hypertarget{ref-Hanson_Klopfer_2006}{}%
+Hansen, B. B., \& Klopfer, S. O. (2006). Optimal full matching and related designs via network flows. \emph{Journal of Computational and Graphical Statistics}, \emph{15}(3), 609--627. \url{https://doi.org/10.1198/106186006X137047}
+
+\leavevmode\hypertarget{ref-Havy_etal_2016}{}%
+Havy, B., M., \& Nazzi, T. (2016). Phonetic processing when learning words: The case of bilingual infants. \emph{International Journal of Behavioral Development}, \emph{40}(1), 41--52. \url{https://doi.org/10.1177/0165025415570646}
+
+\leavevmode\hypertarget{ref-Hoff_Ribot_2017}{}%
+Hoff, E., \& Ribot, K. M. (2017). Language growth in {E}nglish monolingual and {S}panish-{E}nglish bilingual children from 2.5 to 5 years. \emph{The Journal of Pediatrics}, \emph{190}, 241--245. \url{https://doi.org/10.1016/j.jpeds.2017.06.071}
+
+\leavevmode\hypertarget{ref-Jardak_Byers-Heinlein_2019}{}%
+Jardak, A., \& Byers-Heinlein, K. (2019). Labels or concepts? The development of semantic networks in bilingual two-year-olds. \emph{Child Development}, \emph{90}(2), e212--e229. \url{https://doi.org/10.1111/cdev.13050}
+
+\leavevmode\hypertarget{ref-Jones_Brandt_2019}{}%
+Jones, S., \& Brandt, S. (2019). Do children really acquire dense neighbourhoods? \emph{Journal of Child Language}, \emph{46}(6), 1260--1273. \url{https://doi.org/10.1017/S0305000919000473}
+
+\leavevmode\hypertarget{ref-Kelley_Kohnert_2012}{}%
+Kelley, A., \& Kohnert, K. (2012). Is there a cognate advantage for typically developing {S}panish-speaking {E}nglish-language learners? \emph{Language, Speech, and Hearing Services in Schools}, \emph{43}(2), 191--204. \url{https://doi.org/10.1044/0161-1461(2011/10-0022)}
+
+\leavevmode\hypertarget{ref-Kuznetsova_etal_2017}{}%
+Kuznetsova A., P. B., Brockhoff, \& Christensen, R. H. B. (2017). lmerTest package: Tests in linear mixed effects models. \emph{Journal of Statistical Software}, \emph{82}(13), 1--26. \url{https://doi.org/10.18637/jss.v082.i13}
+
+\leavevmode\hypertarget{ref-Legacy_etal_2017}{}%
+Legacy, J., Reider, J., Crivello, C., Kuzyk, O., Friend, M., Zesiger, P., \& Poulin-Dubois, D. (2017). Dog or chien? Translation equivalents in the receptive and expressive vocabularies of young {F}rench--{E}nglish bilinguals. \emph{Journal of Child Language}, \emph{44}(4), 881--904. \url{https://doi.org/10.1017/S0305000916000295}
+
+\leavevmode\hypertarget{ref-Luce_Pisoni_1998}{}%
+Luce, P. A., \& Pisoni, D. B. (1998). Recognizing spoken words: The neighborhood activation model. \emph{Ear and Hearing}, \emph{19}, 1. \url{https://doi.org/10.1097/00003446-199802000-00001}
+
+\leavevmode\hypertarget{ref-Marchman_etal_2010}{}%
+Marchman, V. A., Fernald, A., \& Hurtado, N. (2010). How vocabulary size in two languages relates to efficiency in spoken word recognition by young {S}panish-{E}nglish bilinguals. \emph{Journal of Child Language}, \emph{37}(4), 817--840. \url{https://doi.org/10.1017/S0305000909990055}
+
+\leavevmode\hypertarget{ref-Morin-Lessard_Byers-Heinlein_2019}{}%
+Morin-Lessard, E., \& Byers-Heinlein, K. (2019). Uh and euh signal novelty for monolinguals and bilinguals: Evidence from children and adults. \emph{Journal of Child Language}, \emph{46}(3), 522--545. \url{https://doi.org/10.1017/s0305000918000612}
+
+\leavevmode\hypertarget{ref-Pearson_etal_1995}{}%
+Pearson, B. Z., Fernández, S. C., \& Oller, D. K. and. (1995). Cross-language synonyms in the lexicons of bilingual infants: One language or two? \emph{Journal of Child Language}, \emph{22}(2), 345--368. \url{https://doi.org/10.1017/s030500090000982x}
+
+\leavevmode\hypertarget{ref-Place_Hoff_2011}{}%
+Place, S., \& Hoff, E. (2011). Properties of dual language exposure that influence 2-year-olds' bilingual proficiency. \emph{Child Development}, \emph{82}(6), 1834--1849. \url{https://doi.org/10.1111/j.1467-8624.2011.01660.x}
+
+\leavevmode\hypertarget{ref-R_2019}{}%
+R Core Team. (2019). \emph{R: A language and environment for statistical computing}. Vienna, Austria: R Foundation for Statistical Computing. Retrieved from \url{https://www.R-project.org/}
+
+\leavevmode\hypertarget{ref-Ramon-Casas_Bosch_2010}{}%
+Ramon-Casas, M., \& Bosch, L. (2010). Are non-cognate words phonologically better specified than cognates in the early lexicon of bilingual children? In \emph{Proceedings of the 4th conference on laboratory approaches to spanish phonology} (pp. 31--36). Sommerville, MA: Cascadilla.
+
+\leavevmode\hypertarget{ref-Ramon-Casas_etal_2009}{}%
+Ramon-Casas, S., M., \& Bosch, L. (2009). Vowel categorization during word recognition in bilingual toddlers. \emph{Cognitive Psychology}, \emph{59}(1), 96--121. \url{https://doi.org/10.1016/j.cogpsych.2009.02.002}
+
+\leavevmode\hypertarget{ref-Schelletter_2002}{}%
+Schelletter, C. (2002). The effect of form similarity on bilingual children's lexical development. \emph{Bilingualism: Language and Cognition}, \emph{5}(2), 93--107. \url{https://doi.org/10.1017/S1366728902000214}
+
+\leavevmode\hypertarget{ref-Schepens_etal_2013}{}%
+Schepens, J., Dijkstra, T., Grootjen, F., \& Heuven, W. J. B. van. (2013). Cross-language distributions of high frequency and phonetically similar cognates. \emph{PLOS ONE}, \emph{8}(5), e63006. \url{https://doi.org/10.1371/journal.pone.0063006}
+
+\leavevmode\hypertarget{ref-Schott_Byers-Heinlein_2019}{}%
+Schott, E., \& Byers-Heinlein, K. (2019). \emph{Bilingual and monolingual toddlers are sensitive to mispronunciations for familiar cognate and non-cognate words.} Poster presented at the 44th Annual Boston University Conference on Language Development, Boston, United States.
+
+\leavevmode\hypertarget{ref-Sebastiuxe1n-Galluxe9s_Bosch_2009}{}%
+Sebastián-Gallés, N., \& Bosch, L. (2009). Developmental shift in the discrimination of vowel contrasts in bilingual infants: Is the distributional account all there is to it? \emph{Developmental Science}, \emph{12}(6), 874--887. \url{https://doi.org/10.1111/j.1467-7687.2009.00829.x}
+
+\leavevmode\hypertarget{ref-Sheng_etal_2016}{}%
+Sheng, L., L., \& Fulton, A. (2016). A robust demonstration of the cognate facilitation effect in first-language and second-language naming. \emph{Journal of Experimental Child Psychology}, \emph{141}, 229--238. \url{https://doi.org/10.1016/j.jecp.2015.09.007}
+
+\leavevmode\hypertarget{ref-Singh_2014}{}%
+Singh, L. (2014). One world, two languages: Cross-language semantic priming in bilingual toddlers. \emph{Child Development}, \emph{85}(2), 755--766. \url{https://doi.org/10.1111/cdev.12133}
+
+\leavevmode\hypertarget{ref-Squirres_etal_2020}{}%
+Squires, O., L. R., \& Roberts, J. L. (2020). Factors influencing cognate performance for young multilingual children's vocabulary: A research synthesis. \emph{American Journal of Speech-Language Pathology}, \emph{29}(4), 2170--2188. \url{https://doi.org/10.1044/2020_AJSLP-19-00167}
+
+\leavevmode\hypertarget{ref-Storkel_2009}{}%
+Storkel, H. L. (2009). Developmental differences in the effects of phonological, lexical and semantic variables on word learning by infants. \emph{Journal of Child Language}, \emph{36}(2), 291--321. \url{https://doi.org/10.1017/S030500090800891X}
+
+\leavevmode\hypertarget{ref-Trudeau_etal_1999}{}%
+Trudeau, N., Frank, I., \& Poulin-Dubois, D. (1999). Une adaptation en français québecois du MacArthur {C}ommunicative {D}evelopment {I}nventory {[}a {Q}uebec {F}rench adaptation of the MacArthur {C}ommunicative {D}evelopment {I}nventory{]}. \emph{Revue d'orthophonie Et d'audiologie}, \emph{23}, 31--73.
+
+\leavevmode\hypertarget{ref-Tsui_etal_2021}{}%
+Tsui, R. K.-Y., Gonzalez-Barrero, A. M., Schott, E., \& Byers-Heinlein, K. (2021). \emph{Are translation equivalents special? Evidence from simulations and empirical data from bilingual infants}. Preprint. Retrieved from \url{https://psyarxiv.com/h4jxe/}
+
+\leavevmode\hypertarget{ref-Volterra_Taeschner_1978}{}%
+Volterra, V., \& Taeschner, T. (1978). The acquisition and development of language by bilingual children. \emph{Journal of Child Language}, \emph{5}, 311--326. \url{https://doi.org/10.1017/S0305000900007492}
+
+\leavevmode\hypertarget{ref-VonHolzen_Mani_2012}{}%
+Von Holzen, K., \& Mani, N. (2012). Language nonselective lexical access in bilingual toddlers. \emph{Journal of Experimental Child Psychology}, \emph{113}(4), 569--586. \url{https://doi.org/10.1016/j.jecp.2012.08.001}
+
+\leavevmode\hypertarget{ref-White_etal_2017}{}%
+White, M., A., \& Storms, G. (2017). Convergence in the bilingual lexicon: A pre-registered replication of previous studies. \emph{Frontiers in Psychology}, \emph{7}, 2081. \url{https://doi.org/10.3389/fpsyg.2016.02081}
+
+\end{CSLReferences}
+
+\endgroup
 
 
 \end{document}
