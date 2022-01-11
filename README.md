@@ -19,7 +19,7 @@ Repository overview: This repository holds the data and analysis script for the 
 * `public_keepers_cognate_matched.csv`: The final data merged with the matched cognate list (with 162 cognates and non-cognates).
 
 ## data_dictionary
-* data_dictionary.html: Data dictionary with information about the data set used in the paper (i.e., public_keepers_cognate_full.csv & public_keepers_cognate_matched.csv).
+* `data_dictionary.html`: Data dictionary with information about the data set used in the paper (i.e., public_keepers_cognate_full.csv & public_keepers_cognate_matched.csv).
 
 ## paper
 This folder contains the .Rmd file which runs the analysis and knits the result into a .pdf file.
