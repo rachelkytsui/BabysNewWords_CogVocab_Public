@@ -1,0 +1,191 @@
+---
+title: "Data dictionary: Cognates are advantaged in early bilingual expressive vocabulary development"
+author: "Lori,Mitchell, Rachel K.Y. Tsui, & Krista Byers-Heinlein"
+date: '`r format(Sys.time(), "%a %b %d %X %Y")`'
+output:
+  html_document:
+    toc: true
+    toc_depth: 4
+    toc_float: true
+    code_folding: 'hide'
+    self_contained: true
+  pdf_document:
+    toc: yes
+    toc_depth: 4
+    latex_engine: xelatex
+---
+
+```{r setup, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(
+  warning = TRUE, # show warnings during codebook generation
+  message = TRUE, # show messages during codebook generation
+  error = TRUE, # do not interrupt codebook generation in case of errors,
+                # usually better for debugging
+  echo = TRUE  # show R code
+)
+ggplot2::theme_set(ggplot2::theme_bw())
+pander::panderOptions("table.split.table", Inf)
+```
+
+```{r library, message=FALSE, warning=FALSE}
+# load libraries
+library(codebook)
+library(here)
+library(dplyr)
+library(tidyverse)
+library(future)
+library(labelled)
+```
+
+This is a data dictionary for the data set used in the paper "Cognates are advantaged in early bilingual expressive vocabulary development".
+
+```{r message=FALSE, warning=FALSE}
+#load dataset
+keepers_cognate_full <- rio::import(here::here("data_keepers/public_keepers_cognate_full.csv"))
+
+keepers_cognate_matched <- rio::import(here::here("data_keepers/public_keepers_cognate_matched.csv"))
+```
+
+# Variables {.tabset}
+
+## keepers_cognate_full: Overview
+```{r}
+codebook_items(keepers_cognate_full)
+```
+
+## keepers_cognate_matched: Overview
+```{r}
+codebook_items(keepers_cognate_matched)
+```
+
+## subject_id & n_months
+* __subject_id__: Unique participant ID
+* __n_months__: The month of administration, where 1 means the participant contributed data the first month after they entered the study. The subsequent numbers refers to the months that they contributed data along the study.
+
+The dataset included N = `r length(unique(keepers_cognate_full$subject_id))` participants. 
+
+```{r message=FALSE, warning=FALSE}
+keepers_cognate_full %>% 
+  mutate(administration = str_c(subject_id, "_", n_months)) %>%
+  summarize(N_subject_id = n_distinct(subject_id),
+            N_administration = n_distinct(administration))
+```
+## completed
+* __completed_eng__: whether the English form was completed that month
+* __completed_fr__: whether the French form was completed that month
+* __completed_both__: whether both the English and French forms was completed that month
+
+In the final analysis, we only kept data where both the English and French forms were completed within the same month.
+
+```{r message=FALSE, warning=FALSE}
+keepers_cognate_full %>% 
+  mutate(administration = str_c(subject_id, "_", n_months)) %>%
+  distinct(administration, .keep_all = TRUE) %>%
+  summarize(n_completed_eng = length(completed_eng),
+            n_completed_fr = length(completed_fr),
+            n_completed_both = length(completed_both))
+```
+
+## age
+* __age_days__: Age in days, calculated by _Date of test_ - _Date of birth_ (which are both removed from the public data to protect the participants' information)
+* __age_months__: Age in months (with decimal), calculated by age_days/(365.25/12)
+
+```{r message=FALSE, warning=FALSE}
+keepers_cognate_full %>%
+  summarize(mean_age_days = mean(age_days, na.rm = T),
+            sd_age_days = sd(age_days, na.rm = T),
+            min_age_days = min(age_days, na.rm = T),
+            max_age_days = max(age_days, na.rm = T))
+```
+
+```{r message=FALSE, warning=FALSE}
+keepers_cognate_full %>% 
+  ggplot(aes(age_days)) +
+  geom_histogram()
+```
+
+## sex
+* __sex__: categorical with 2 levels: Female & Male
+
+```{r message=FALSE, warning=FALSE}
+keepers_cognate_full %>%
+  distinct(subject_id, .keep_all = TRUE) %>% 
+  count(sex) %>%
+  mutate(percentage = round(n/sum(n)*100, 2)) 
+```
+
+## total_vocab
+* __total_eng_vocab__: The total number of words the participant produced on the English CDI form within the complete cognate list (i.e., 537 translation equivalents)
+* __total_fr_vocab__: The total number of words the participant produced on the French CDI form within the complete cognate list (i.e., 537 translation equivalents)
+* __total_vocabulary__: The total number of vocabulary produced on both the English and French forms within the complete cognate list (i.e., 537 translation equivalents), calculated by _total_eng_vocab + total_fr_vocab_
+
+```{r message=FALSE, warning=FALSE}
+keepers_cognate_full %>%
+  mutate(administration = str_c(subject_id, "_", n_months)) %>%
+  distinct(administration, .keep_all = TRUE) %>%
+  pivot_longer(c(matches("total_")), names_to = "type", values_to = "n_words") %>%
+  group_by(type) %>%
+  summarize(mean_n_words = mean(n_words, na.rm=T),
+            sd_n_words = sd(n_words, na.rm=T),
+            min_n_words = min(n_words, na.rm=T),
+            max_n_words = max(n_words, na.rm=T))
+```
+
+## word_pairs
+* __word_pairs__: The translation equivalent pair with the English word listed before the hyphen and the French word after
+* __cognate_status__: Whether the translation equivalent pair is "cognate" or "non-cognate" (2 levels)
+* __english_item_id & english_item__: The item in the English CDI form and its item number on the CDI form
+* __french_item_id & french_item__: The item in the French CDI form and its item number on the CDI form
+* __eng_acquired__: Whether the participant produced the English item, with 2 levels: 1 = produced and 0 = not yet produced
+* __fr_acquired__: Whether the participant produced the French item, with 2 levels: 1 = produced and 0 = not yet produced
+* __Eng_AoA__ (only in keepers_cognate_matched.csv): Age of acquisition for each English CDI word retrieved from Wordbankr
+* __Fr_AoA__ (only in keepers_cognate_matched.csv): Age of acquisition for each French CDI word retrieved from Wordbankr
+
+### Full list
+#### Number of word pairs in the full list
+```{r message=FALSE, warning=FALSE}
+keepers_cognate_full %>%
+  filter(subject_id == 53279 & n_months == 1) %>%
+  summarize(n = length(word_pairs))
+```
+
+#### Number of cognates vs. non-cognates in the full list
+```{r message=FALSE, warning=FALSE}
+keepers_cognate_full %>%
+  filter(subject_id == 53279 & n_months == 1) %>%
+  group_by(cognate_status) %>%
+  summarize(n = length(cognate_status))
+```
+
+#### Number of English and French items in the full list
+```{r message=FALSE, warning=FALSE}
+keepers_cognate_full %>%
+  filter(subject_id == 53279 & n_months == 1) %>%
+  summarize(eng_n = length(english_item),
+            fr_n = length(french_item))
+```
+
+### Matched list
+#### Number of word pairs in the matched list
+```{r message=FALSE, warning=FALSE}
+keepers_cognate_matched %>%
+  filter(subject_id == 53279 & n_months == 1) %>%
+  summarize(n = length(word_pairs))
+```
+
+#### Number of cognates vs. non-cognates in the matched list
+```{r message=FALSE, warning=FALSE}
+keepers_cognate_matched %>%
+  filter(subject_id == 53279 & n_months == 1) %>%
+  group_by(cognate_status) %>%
+  summarize(n = length(cognate_status))
+```
+
+#### Number of English and French items in the matched list
+```{r message=FALSE, warning=FALSE}
+keepers_cognate_matched %>%
+  filter(subject_id == 53279 & n_months == 1) %>%
+  summarize(eng_n = length(english_item),
+            fr_n = length(french_item))
+```
+
