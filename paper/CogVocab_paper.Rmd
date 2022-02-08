@@ -600,8 +600,11 @@ keepers_cognate_full_notPair <- keepers_cognate_full %>%
   # calculate total number of words acquired within the full list
   mutate(n_word_acquired = n_Eng_acquired + n_Fr_acquired,
          # percentage of words acquired within the full list
-         percent_word_acquired = (case_when(cognate_status == "cognate" ~ n_word_acquired/(131*2)*100,
-                                       cognate_status == "non-cognate" ~ n_word_acquired/(406*2)*100))) %>%
+         percent_word_acquired = case_when(cognate_status == "cognate" ~ n_word_acquired/(131*2)*100,
+                                       cognate_status == "non-cognate" ~ n_word_acquired/(406*2)*100),
+         # proportion of words acquired within the full list
+         prop_word_acquired = case_when(cognate_status == "cognate" ~ n_word_acquired/(131*2),
+                                       cognate_status == "non-cognate" ~ n_word_acquired/(406*2))) %>%
   ungroup() 
 
 # descriptive
@@ -619,6 +622,13 @@ full_mean_cognates_percentage <- keepers_cognate_full_notPair %>%
             sd_percent_word = sd(percent_word_acquired, na.rm=T),
             min_percent_word = min(percent_word_acquired, na.rm=T),
             max_percent_word = max(percent_word_acquired, na.rm=T))
+
+full_mean_cognates_prop <- keepers_cognate_full_notPair %>%
+  group_by(cognate_status) %>%
+  summarize(mean_prop_word = mean(prop_word_acquired, na.rm=T),
+            sd_prop_word = sd(prop_word_acquired, na.rm=T),
+            min_prop_word = min(prop_word_acquired, na.rm=T),
+            max_prop_word = max(prop_word_acquired, na.rm=T))
 
 # linear mixed-effects model
 full_lme_model <- keepers_cognate_full_notPair %>%
@@ -668,6 +678,57 @@ oldest_difference <- keepers_cognate_full_notPair %>%
   distinct(difference) %>% 
   unname
 
+
+# logistic mixed-effects model
+Analysis1_full_logistic_model <- keepers_cognate_full_notPair %>%
+  # scale and center age for ease of interpretation
+  mutate(age_days = scale(age_days, scale = FALSE, center = TRUE)) %>%
+  # reverse code "cognate_status"
+  mutate(cognate_status = fct_rev(cognate_status)) %>%
+  # create a weight variable for the model
+  mutate(total_number = case_when(cognate_status == "cognate" ~ 131*2,
+                        cognate_status == "non-cognate" ~ 406*2)) %>%
+  # the glmer model
+  glmer(prop_word_acquired ~ cognate_status * age_days + (1|subject_id),
+        family = binomial, weights = total_number,
+        data = .,
+        nAGQ = 0)
+
+Analysis1_full_logistic_model_coefs <- summary(Analysis1_full_logistic_model)$coef %>%
+  as.data.frame %>%
+  mutate_at(c("Estimate","Std. Error", "z value", "Pr(>|z|)"), 
+            function (x) signif(x, digits = 3)) %>% 
+  rename(SE = `Std. Error`, 
+         z = `z value`,
+         p = `Pr(>|z|)`) %>%
+  mutate_if(is.numeric, round, digits = 3) %>%
+  mutate(p = case_when(
+    p < .001 ~ "<.001",
+    p < .01 ~ "<.01",
+    p < .05 ~ "<.05",
+    TRUE ~ as.character(p)))
+
+rownames(Analysis1_full_logistic_model_coefs) <- c("Intercept", "cognate_status", "age_days", 
+                     "cognate_status * age_days") 
+
+  
+  
+  
+# logistic mixed-effects model 2 (counts as DV instead of prop) returns the same result
+check <- keepers_cognate_full %>%
+  # remove unnecessary variables
+  select(-c(english_item, french_item, english_item_id, french_item_id, matches("total_"), matches("completed_"))) %>%
+  pivot_longer(c(eng_acquired, fr_acquired), names_to = "language", values_to = "acquired") %>%
+  # scale and center age for ease of interpretation
+  mutate(age_days = scale(age_days, scale = FALSE, center = TRUE)) %>%
+  # reverse code "cognate_status"
+  mutate(cognate_status = fct_rev(cognate_status)) %>%
+  # the glmer model
+  glmer(acquired ~ cognate_status * age_days + (1|subject_id),
+        family = binomial,
+        data = ., 
+        nAGQ = 0)
+
 ```
 Out of the complete list which contained 262 cognate words (i.e., adding the 131 English cognate words and 131 French cognate words) and 812 non-cognate words (i.e., adding the 406 English non-cognate words and 406 French non-cognate words), bilingual infants produced an average of `r round(full_mean_cognates[which(full_mean_cognates$cognate_status=="cognate"),2],0)` cognate words (SD = `r round(full_mean_cognates[which(full_mean_cognates$cognate_status=="cognate"),3],2)`, range = `r round(full_mean_cognates[which(full_mean_cognates$cognate_status=="cognate"),4],0)` – `r round(full_mean_cognates[which(full_mean_cognates$cognate_status=="cognate"),5],0)`) and `r round(full_mean_cognates[which(full_mean_cognates$cognate_status=="non-cognate"),2],0)` non-cognate words (SD = `r round(full_mean_cognates[which(full_mean_cognates$cognate_status=="non-cognate"),3],2)`, range = `r round(full_mean_cognates[which(full_mean_cognates$cognate_status=="non-cognate"),4],0)` – `r round(full_mean_cognates[which(full_mean_cognates$cognate_status=="non-cognate"),5],0)`). The percentage of cognate words produced was `r round(full_mean_cognates_percentage[which(full_mean_cognates_percentage$cognate_status=="cognate"),2],2)`% (SD = `r round(full_mean_cognates_percentage[which(full_mean_cognates_percentage$cognate_status=="cognate"),3],2)`, range = `r round(full_mean_cognates_percentage[which(full_mean_cognates_percentage$cognate_status=="cognate"),4],2)` – `r round(full_mean_cognates_percentage[which(full_mean_cognates_percentage$cognate_status=="cognate"),5],2)`), whereas the percentage of non-cognate words produced was `r round(full_mean_cognates_percentage[which(full_mean_cognates_percentage$cognate_status=="non-cognate"),2],2)`% (SD = `r round(full_mean_cognates_percentage[which(full_mean_cognates_percentage$cognate_status=="non-cognate"),3],2)`, range = `r round(full_mean_cognates_percentage[which(full_mean_cognates_percentage$cognate_status=="non-cognate"),4],2)` – `r round(full_mean_cognates_percentage[which(full_mean_cognates_percentage$cognate_status=="non-cognate"),5],2)`). Table 1 shows the coefficient estimates for the model and Figure 1 Panel A visualizes the model. The main effect of cognate status was also significant, suggesting that bilingual infants produced `r round(full_lme_model_coefs[2,1],0)`% more cognate words than non-cognate words at the mean age of `r round(mean_age,1)` days (approximately `r round(mean_age/30,0)` months). The significant effect of age suggested that for every day of increased age, older infants produced `r round(full_lme_model_coefs[3,1],1)`% more non-cognate words (the reference level) than younger infants. The significant interaction between age and cognate status further suggested that the pattern of infants producing more cognate words strengthened as they aged, indicating that for every additional day infants produced `r round(full_lme_model_coefs[4,1],2)`% more cognate words than non-cognate words. As an example, at the youngest age in our sample (~`r round(youngest/30,0)` months or `r youngest` days), the model predicts little to no difference in cognate vs. non-cognate production, versus at the oldest age in our sample (~`r round(oldest/30, 0)` months or `r oldest` days), the model predicts that infants will produce `r round(oldest_difference[1,1],2)`% more cognates than non-cognates.
 
@@ -683,7 +744,8 @@ keepers_cognate_matched_notPair <- keepers_cognate_matched %>%
             n_Fr_acquired = sum(fr_acquired, na.rm=T))%>%
   # calculate total number of words acquired within the matched list
   mutate(n_word_acquired = n_Eng_acquired + n_Fr_acquired,
-         percent_word_acquired = n_word_acquired/(81*2)*100) %>% # percentage of words acquired within the matched list
+         percent_word_acquired = n_word_acquired/(81*2)*100, # percentage of words acquired within the matched list
+         prop_word_acquired = n_word_acquired/(81*2)) %>%
   ungroup() 
 
 # descriptive
@@ -701,6 +763,13 @@ matched_mean_cognates_percentage <- keepers_cognate_matched_notPair %>%
             sd_percent_word = sd(percent_word_acquired, na.rm=T),
             min_percent_word = min(percent_word_acquired, na.rm=T),
             max_percent_word = max(percent_word_acquired, na.rm=T))
+
+matched_mean_cognates_prop <- keepers_cognate_matched_notPair %>%
+  group_by(cognate_status) %>%
+  summarize(mean_prop_word = mean(prop_word_acquired, na.rm=T),
+            sd_prop_word = sd(prop_word_acquired, na.rm=T),
+            min_prop_word = min(prop_word_acquired, na.rm=T),
+            max_prop_word = max(prop_word_acquired, na.rm=T))
 
 # linear mixed-effects model
 matched_lme_model <- keepers_cognate_matched_notPair %>%
@@ -730,6 +799,38 @@ matched_lme_model_coefs <- summary(matched_lme_model)$coef %>%
 rownames(matched_lme_model_coefs) <- c("Intercept", "cognate_status", "age_days", 
                      "cognate_status * age_days") 
 
+
+# logistic mixed-effects model
+Analysis1_matched_logistic_model <- keepers_cognate_matched_notPair %>%
+  # scale and center age for ease of interpretation
+  mutate(age_days = scale(age_days, scale = FALSE, center = TRUE)) %>%
+  # reverse code "cognate_status"
+  mutate(cognate_status = fct_rev(cognate_status)) %>%
+  # create a weight variable for the model
+  mutate(total_number = 81*2) %>%
+  # the glmer model
+  glmer(prop_word_acquired ~ cognate_status * age_days + (1|subject_id),
+        family = binomial, weights = total_number,
+        data = .,
+        nAGQ = 0)
+
+Analysis1_matched_logistic_model_coefs <- summary(Analysis1_matched_logistic_model)$coef %>%
+  as.data.frame %>%
+  mutate_at(c("Estimate","Std. Error", "z value", "Pr(>|z|)"), 
+            function (x) signif(x, digits = 3)) %>% 
+  rename(SE = `Std. Error`, 
+         z = `z value`,
+         p = `Pr(>|z|)`) %>%
+  mutate_if(is.numeric, round, digits = 3) %>%
+  mutate(p = case_when(
+    p < .001 ~ "<.001",
+    p < .01 ~ "<.01",
+    p < .05 ~ "<.05",
+    TRUE ~ as.character(p)))
+
+rownames(Analysis1_matched_logistic_model_coefs) <- c("Intercept", "cognate_status", "age_days", 
+                     "cognate_status * age_days") 
+
 ```
 
 Out of the 162 cognate (i.e., adding the 81 English cognate words and 81 French cognate words) and 162 non-cognate words (i.e., adding the 81 English non-cognate words and 81 French non-cognate words) on the matched list, bilingual infants produced an average of `r round(matched_mean_cognates[which(matched_mean_cognates$cognate_status=="cognate"),2],0)` cognate words (SD = `r round(matched_mean_cognates[which(matched_mean_cognates$cognate_status=="cognate"),3],2)`, range = `r round(matched_mean_cognates[which(matched_mean_cognates$cognate_status=="cognate"),4],0)` – `r round(matched_mean_cognates[which(matched_mean_cognates$cognate_status=="cognate"),5],0)`) and `r round(matched_mean_cognates[which(matched_mean_cognates$cognate_status=="non-cognate"),2],0)` non-cognate words (SD = `r round(matched_mean_cognates[which(matched_mean_cognates$cognate_status=="non-cognate"),3],2)`, range = `r round(matched_mean_cognates[which(matched_mean_cognates$cognate_status=="non-cognate"),4],0)` – `r round(matched_mean_cognates[which(matched_mean_cognates$cognate_status=="non-cognate"),5],0)`). The overall mean percentage of cognate words produced was `r round(matched_mean_cognates_percentage[which(matched_mean_cognates_percentage$cognate_status=="cognate"),2],1)`% of words (SD = `r round(matched_mean_cognates_percentage[which(matched_mean_cognates_percentage$cognate_status=="cognate"),3],2)`, range = `r round(matched_mean_cognates_percentage[which(matched_mean_cognates_percentage$cognate_status=="cognate"),4],2)` – `r round(matched_mean_cognates_percentage[which(matched_mean_cognates_percentage$cognate_status=="cognate"),5],2)`), whereas the percentage of non-cognate words produced was `r round(matched_mean_cognates_percentage[which(matched_mean_cognates_percentage$cognate_status=="non-cognate"),2],1)`% (SD = `r round(matched_mean_cognates_percentage[which(matched_mean_cognates_percentage$cognate_status=="non-cognate"),3],2)`, range = `r round(matched_mean_cognates_percentage[which(matched_mean_cognates_percentage$cognate_status=="non-cognate"),4],2)` – `r round(matched_mean_cognates_percentage[which(matched_mean_cognates_percentage$cognate_status=="non-cognate"),5],2)`). Table 1 also shows the coefficient estimates for the matched list model and Figure 1 Panel B visualizes the model. Similar to the patterns reported in the complete list model, there were significant effects of age and cognate status. The effect of cognate status suggested that in general bilingual infants produced `r round(matched_lme_model_coefs[2,1],0)`% more cognate words than non-cognate words at the mean age of our sample (`r round(mean_age,1)` days). The age effect suggested that older infants produced `r round(matched_lme_model_coefs[3,1],1)`% more non-cognate words (the reference level) than younger infants. The interaction between cognate and age was also significant: for every additional day infants produced `r round(matched_lme_model_coefs[4,1],2)`% more cognate words than non-cognate words on the matched list. Therefore, overall the direction of effects was similar to the previous analysis (i.e., more cognate words than non-cognate words). 
@@ -750,12 +851,16 @@ Figure1 <- right_join(percent_word_full, percent_word_matched) %>%
   pivot_longer(c(full_percent_word, matched_percent_word), names_to = "list", values_to = "percent_word") %>%
   mutate(list = recode(list, 
                         full_percent_word = "Panel A: Complete list",
-                        matched_percent_word = "Panel B: Matched list")) %>%
+                        matched_percent_word = "Panel B: Matched list"),
+         cognate_status = recode(cognate_status,
+                                  "cognate" = "Cognate",
+                                  "non-cognate" = "Non-cognate")) %>%
   group_by(subject_id, n_months, list, cognate_status) %>%
   ggplot(aes(x = age_days, y = percent_word, color = cognate_status)) +
   facet_wrap(. ~ list) +
   geom_smooth(method = "lm", se = FALSE) + 
-  geom_point(stat = "identity", position = "identity", shape = 23) +
+  geom_point(stat = "identity", position = "identity", shape = 23, alpha = 0.5) +
+  geom_vline(xintercept = 547.6, linetype="dashed", alpha = 0.5) +
   labs(x = "\n Age (in days)", 
        y = "Percentage of words produced (%)",
        color = "Cognate status") + 
@@ -766,6 +871,49 @@ Figure1 <- right_join(percent_word_full, percent_word_matched) %>%
         panel.spacing = unit(1.5, "lines")) 
 
 Figure1
+
+ggsave("Figure1.png", Figure1,
+       width = 9, height = 6)
+```
+
+```{r Fig1, fig.cap="Proportion of words produced by age and cognate status, with Panel A representing the complete list and Panel B representing the matched list.", echo=FALSE, dpi=600, fig.align='center', fig.height=4, out.width="120%", cache = TRUE}
+
+prop_word_full <- keepers_cognate_full_notPair %>%
+  select(subject_id, n_months, age_days, cognate_status, prop_word_acquired) %>%
+  rename(full_prop_word = prop_word_acquired) 
+
+prop_word_matched <- keepers_cognate_matched_notPair %>%
+  select(subject_id, n_months, age_days, cognate_status, prop_word_acquired) %>%
+  rename(matched_prop_word = prop_word_acquired)
+
+Figure1 <- right_join(prop_word_full, prop_word_matched) %>%
+  pivot_longer(c(full_prop_word, matched_prop_word), names_to = "list", values_to = "prop_word") %>%
+  mutate(list = recode(list, 
+                        full_prop_word = "Panel A: Complete list",
+                        matched_prop_word = "Panel B: Matched list"),
+         cognate_status = recode(cognate_status,
+                                  "cognate" = "Cognate",
+                                  "non-cognate" = "Non-cognate")) %>%
+  group_by(subject_id, n_months, list, cognate_status) %>%
+  ggplot(aes(x = age_days, y = prop_word, color = cognate_status)) +
+  facet_wrap(. ~ list) +
+  geom_smooth(method = "glm", se = FALSE, method.args = list(family = binomial)) + 
+  geom_point(stat = "identity", position = "identity", shape = 23, alpha = 0.5) +
+  geom_vline(xintercept = 547.6, linetype="dashed", alpha = 0.5) +
+  labs(x = "\n Age (in days)", 
+       y = "Proportion of words produced",
+       color = "Cognate status") + 
+  ylim(0, 1) +
+  theme_minimal() +
+  theme(text = element_text(size=12),
+        strip.text.x = element_text(size = 12),
+        legend.position = "bottom",
+        panel.spacing = unit(1.5, "lines")) 
+
+Figure1
+
+ggsave("Figure1.png", Figure1,
+       width = 9, height = 6)
 ```
 
 ```{r Table 1, results = "asis", cache = TRUE}
@@ -803,6 +951,15 @@ full_mean_percent_TE <- keepers_cognate_full_wide %>%
             min_TE = min(percent_TE_acquired, na.rm=T),
             max_TE = max(percent_TE_acquired, na.rm=T))
 
+## proportion
+full_mean_percent_TE <- keepers_cognate_full_wide %>%
+  mutate(prop_TE_acquired = percent_TE_acquired/100) %>%
+  group_by(cognate_status) %>%
+  summarize(mean_TE = mean(prop_TE_acquired, na.rm=T),
+            sd_TE = sd(prop_TE_acquired, na.rm=T),
+            min_TE = min(prop_TE_acquired, na.rm=T),
+            max_TE = max(prop_TE_acquired, na.rm=T))
+
 # lme: TE ~ cognate_status * age + (age|subject_id) + (cognate_status|subject_id)
 full_lme_final <- keepers_cognate_full_wide %>%
   # reverse-order cognate status, so that the non-cognate status would be the reference level
@@ -830,6 +987,44 @@ full_lme_final_coefs <- summary(full_lme_final)$coef %>%
 
 rownames(full_lme_final_coefs) <- c("Intercept", "cognate_status", "age_days", 
                      "cognate_status * age_days") 
+
+
+# logistic model
+Analysis2_full_logistic_model <- keepers_cognate_full_wide %>%
+  # reverse-order cognate status, so that the non-cognate status would be the reference level
+  mutate(cognate_status = fct_rev(cognate_status)) %>%
+  # scale and center age for ease of interpretation
+  mutate(age_days = scale(age_days, scale = FALSE, center = TRUE)) %>%
+  # change percentage to proportion
+  mutate(prop_TE_acquired = percent_TE_acquired/100) %>%
+  # create a weight variable for the model
+  mutate(total_number = case_when(cognate_status == "cognate" ~ 131,
+                        cognate_status == "non-cognate" ~ 406)) %>%
+  # the glmer model
+  glmer(prop_TE_acquired ~ cognate_status * age_days + (1|subject_id),
+        family = binomial, weights = total_number,
+        data = .,
+        nAGQ = 0)
+
+
+Analysis2_full_logistic_model_coefs <- summary(Analysis2_full_logistic_model)$coef %>%
+  as.data.frame %>%
+  mutate_at(c("Estimate","Std. Error", "z value", "Pr(>|z|)"), 
+            function (x) signif(x, digits = 3)) %>% 
+  rename(SE = `Std. Error`, 
+         z = `z value`,
+         p = `Pr(>|z|)`) %>%
+  mutate_if(is.numeric, round, digits = 3) %>%
+  mutate(p = case_when(
+    p < .001 ~ "<.001",
+    p < .01 ~ "<.01",
+    p < .05 ~ "<.05",
+    TRUE ~ as.character(p)))
+
+rownames(Analysis2_full_logistic_model_coefs) <- c("Intercept", "cognate_status", "age_days", 
+                     "cognate_status * age_days") 
+
+
 ```
 
 Out of the complete list which contained `r nrow(CognateList_full_clean)` translation equivalent pairs (`r nrow(CognateList_full_clean[which(CognateList_full_clean$cognate_status=="cognate"),])` cognates and `r nrow(CognateList_full_clean[which(CognateList_full_clean$cognate_status=="non-cognate"),])` non-cognates), infants produced an average of `r round(full_mean_total_TE[which(full_mean_total_TE$cognate_status=="cognate"),2],0)` cognate pairs (SD = `r round(full_mean_total_TE[which(full_mean_total_TE$cognate_status=="cognate"),3],2)`, range = `r round(full_mean_total_TE[which(full_mean_total_TE$cognate_status=="cognate"),4],0)` – `r round(full_mean_total_TE[which(full_mean_total_TE$cognate_status=="cognate"),5],0)`) and `r round(full_mean_total_TE[which(full_mean_total_TE$cognate_status=="non-cognate"),2],0)` non-cognate pairs (SD = `r round(full_mean_total_TE[which(full_mean_total_TE$cognate_status=="non-cognate"),3],2)`, range = `r round(full_mean_total_TE[which(full_mean_total_TE$cognate_status=="non-cognate"),4],0)` – `r round(full_mean_total_TE[which(full_mean_total_TE$cognate_status=="non-cognate"),5],0)`). The percentage of cognate pairs produced was `r round(full_mean_percent_TE[which(full_mean_percent_TE$cognate_status=="cognate"),2],1)`% (SD = `r round(full_mean_percent_TE[which(full_mean_percent_TE$cognate_status=="cognate"),3],2)`, range = `r round(full_mean_percent_TE[which(full_mean_percent_TE$cognate_status=="cognate"),4],2)` – `r round(full_mean_percent_TE[which(full_mean_percent_TE$cognate_status=="cognate"),5],2)`) whereas the percentage of non-cognate pairs produced was `r round(full_mean_percent_TE[which(full_mean_percent_TE$cognate_status=="non-cognate"),2],1)`% (SD = `r round(full_mean_percent_TE[which(full_mean_percent_TE$cognate_status=="non-cognate"),3],2)`, range = `r round(full_mean_percent_TE[which(full_mean_percent_TE$cognate_status=="non-cognate"),4],2)` – `r round(full_mean_percent_TE[which(full_mean_percent_TE$cognate_status=="non-cognate"),5],2)`). Table 2 shows the coefficient estimates for the model and Figure 2 Panel A visualizes the model. The significant effect of age suggested that bilingual infants produced `r round(full_lme_final_coefs[3,1],2)`% more non-cognate pairs (the reference level) with every increase in day of age. There was also a significant effect of cognate status, suggesting that on average infants produced `r round(full_lme_final_coefs[2,1],0)`% more translation equivalent pairs that are cognates than those that are non-cognates at the reference age level of `r round(mean_age,1)` days. Likewise, the significant interaction between age and cognate status indicated that the pattern of producing more cognate pairs strengthened as bilingual infants aged. Therefore, bilingual infants produced an even greater percentage of cognate pairs than non-cognate pairs with age. 
@@ -852,6 +1047,15 @@ matched_mean_percent_TE <- keepers_cognate_matched_wide %>%
             sd_TE = sd(percent_TE_acquired, na.rm=T),
             min_TE = min(percent_TE_acquired, na.rm=T),
             max_TE = max(percent_TE_acquired, na.rm=T))
+
+## proportion
+matched_mean_prop_TE <- keepers_cognate_matched_wide %>%
+  mutate(prop_TE_acquired = percent_TE_acquired/100) %>%
+  group_by(cognate_status) %>%
+  summarize(mean_TE = mean(prop_TE_acquired, na.rm=T),
+            sd_TE = sd(prop_TE_acquired, na.rm=T),
+            min_TE = min(prop_TE_acquired, na.rm=T),
+            max_TE = max(prop_TE_acquired, na.rm=T))
 
 # lme: TE ~ cognate_status * age + (age|subject_id) + (cognate_status|subject_id)
 matched_lme_final <- keepers_cognate_matched_wide %>%
@@ -879,6 +1083,43 @@ matched_lme_final_coefs <- summary(matched_lme_final)$coef %>%
 
 rownames(matched_lme_final_coefs) <- c("Intercept", "cognate_status", "age_days", 
                      "cognate_status * age_days") 
+
+
+# logistic model
+Analysis2_matched_logistic_model <- keepers_cognate_matched_wide %>%
+  # reverse-order cognate status, so that the non-cognate status would be the reference level
+  mutate(cognate_status = fct_rev(cognate_status)) %>%
+  # scale and center age for ease of interpretation
+  mutate(age_days = scale(age_days, scale = FALSE, center = TRUE)) %>%
+  # change percentage to proportion
+  mutate(prop_TE_acquired = percent_TE_acquired/100) %>%
+  # create a weight variable for the model
+  mutate(total_number = 81) %>%
+  # the glmer model
+  glmer(prop_TE_acquired ~ cognate_status * age_days + (1|subject_id),
+        family = binomial, weights = total_number,
+        data = .,
+        nAGQ = 0)
+
+
+Analysis2_matched_logistic_model_coefs <- summary(Analysis2_matched_logistic_model)$coef %>%
+  as.data.frame %>%
+  mutate_at(c("Estimate","Std. Error", "z value", "Pr(>|z|)"), 
+            function (x) signif(x, digits = 3)) %>% 
+  rename(SE = `Std. Error`, 
+         z = `z value`,
+         p = `Pr(>|z|)`) %>%
+  mutate_if(is.numeric, round, digits = 3) %>%
+  mutate(p = case_when(
+    p < .001 ~ "<.001",
+    p < .01 ~ "<.01",
+    p < .05 ~ "<.05",
+    TRUE ~ as.character(p)))
+
+rownames(Analysis2_matched_logistic_model_coefs) <- c("Intercept", "cognate_status", "age_days", 
+                     "cognate_status * age_days") 
+
+
 ```
 
 Out of the `r nrow(CognateList_matching)` translation equivalent pairs, bilingual infants produced an average of `r round(matched_mean_total_TE[matched_mean_total_TE$cognate_status=="cognate",2],0)` cognate pairs (SD = `r round(matched_mean_total_TE[matched_mean_total_TE$cognate_status=="cognate",3],2)`, range = `r round(matched_mean_total_TE[matched_mean_total_TE$cognate_status=="cognate",4],0)` – `r round(matched_mean_total_TE[matched_mean_total_TE$cognate_status=="cognate",5],0)`) and `r round(matched_mean_total_TE[matched_mean_total_TE$cognate_status=="non-cognate",2],0)` non-cognate pairs (SD = `r round(matched_mean_total_TE[matched_mean_total_TE$cognate_status=="non-cognate",3],2)`, range = `r round(matched_mean_total_TE[matched_mean_total_TE$cognate_status=="non-cognate",4],0)` – `r round(matched_mean_total_TE[matched_mean_total_TE$cognate_status=="non-cognate",5],0)`). The percentage of cognate pairs produced was `r round(matched_mean_percent_TE[which(matched_mean_percent_TE$cognate_status=="cognate"),2],1)`% (SD = `r round(matched_mean_percent_TE[which(matched_mean_percent_TE$cognate_status=="cognate"),3],2)`, range = `r round(matched_mean_percent_TE[which(matched_mean_percent_TE$cognate_status=="cognate"),4],2)` – `r round(matched_mean_percent_TE[which(matched_mean_percent_TE$cognate_status=="cognate"),5],2)`) and the percentage of non-cognate pairs produced was `r round(matched_mean_percent_TE[which(matched_mean_percent_TE$cognate_status=="non-cognate"),2],1)`%  (SD = `r round(matched_mean_percent_TE[which(matched_mean_percent_TE$cognate_status=="non-cognate"),3],2)`, range = `r round(matched_mean_percent_TE[which(matched_mean_percent_TE$cognate_status=="non-cognate"),4],2)` – `r round(matched_mean_percent_TE[which(matched_mean_percent_TE$cognate_status=="non-cognate"),5],2)`). The coefficient estimates for the matched list model is shown in Table 2, and Figure 2 Panel B visualizes the model. Similar to the results for the complete list, the main effects of age and cognate status were significant, as well as the interaction between age and cognate status. The age effect suggested that bilingual infants produced `r round(matched_lme_final_coefs[3,1],2)`% more non-cognate translation equivalent pairs with every day of age. The significant effect of cognate status suggested that overall bilingual infants produced `r round(matched_lme_final_coefs[2,1],0)`% more cognate translation equivalent pairs than non-cognate pairs at the mean age of our sample (`r round(mean_age,1)` days). This pattern strengthened with age as suggested by the significant interaction between age and cognate status, such that bilingual infants produced a greater percentage of cognate pairs than non-cognate pairs as they aged. 
@@ -899,12 +1140,16 @@ Figure2 <- right_join(percent_TE_full, percent_TE_matched) %>%
   pivot_longer(c(full_percent_TE, matched_percent_TE), names_to = "list", values_to = "percent_TE") %>%
   mutate(list = recode(list, 
                         full_percent_TE = "Panel A: Full list",
-                        matched_percent_TE = "Panel B: Matched list")) %>%
+                        matched_percent_TE = "Panel B: Matched list"),
+         cognate_status = recode(cognate_status,
+                                  "cognate" = "Cognate",
+                                  "non-cognate" = "Non-cognate")) %>%
   group_by(subject_id, n_months, list, cognate_status) %>%
   ggplot(aes(x = age_days, y = percent_TE, color = cognate_status)) +
   facet_wrap(. ~ list) +
   geom_smooth(method = "lm", se = FALSE) + 
-  geom_point(stat = "identity", position = "identity", shape = 23) +
+  geom_point(stat = "identity", position = "identity", shape = 23, alpha = 0.5) +
+  geom_vline(xintercept = 547.6, linetype = "dashed", alpha = 0.5) +
   labs(x = "\n Age (in days)", 
        y = "Percentage of translation equivalent pairs produced (%)",
        color = "Cognate status") + 
@@ -915,6 +1160,51 @@ Figure2 <- right_join(percent_TE_full, percent_TE_matched) %>%
         panel.spacing = unit(1.5, "lines")) 
 
 Figure2
+
+ggsave("Figure2.png", Figure2,
+       width = 9, height = 6)
+```
+
+```{r Fig2, fig.cap="Proportion of translation equivalent pairs produced by age and cognate status, with Panel A representing the complete list and Panel B representing the matched list.", echo=FALSE, dpi=600, fig.align='center', fig.height=4, out.width="120%", cache = TRUE}
+
+prop_TE_full <- keepers_cognate_full_wide %>%
+  select(subject_id, n_months, age_days, cognate_status, percent_TE_acquired) %>%
+  mutate(full_prop_TE = percent_TE_acquired/100) %>%
+  select(-(percent_TE_acquired))
+
+prop_TE_matched <- keepers_cognate_matched_wide %>%
+  select(subject_id, n_months, age_days, cognate_status, percent_TE_acquired) %>%
+  mutate(matched_prop_TE = percent_TE_acquired/100) %>%
+  select(-(percent_TE_acquired))
+
+Figure2 <- right_join(prop_TE_full, prop_TE_matched) %>%
+  pivot_longer(c(full_prop_TE, matched_prop_TE), names_to = "list", values_to = "prop_TE") %>%
+  mutate(list = recode(list, 
+                        full_prop_TE = "Panel A: Complete list",
+                        matched_prop_TE = "Panel B: Matched list"),
+         cognate_status = recode(cognate_status,
+                                  "cognate" = "Cognate",
+                                  "non-cognate" = "Non-cognate")) %>%
+  group_by(subject_id, n_months, list, cognate_status) %>%
+  ggplot(aes(x = age_days, y = prop_TE, color = cognate_status)) +
+  facet_wrap(. ~ list) +
+  geom_smooth(method = "glm", se = FALSE, method.args = list(family = binomial)) + 
+  geom_point(stat = "identity", position = "identity", shape = 23, alpha = 0.5) +
+  geom_vline(xintercept = 547.6, linetype = "dashed", alpha = 0.5) +
+  labs(x = "\n Age (in days)", 
+       y = "Proportion of translation equivalent pairs produced",
+       color = "Cognate status") + 
+  ylim(0,1) +
+  theme_minimal() +
+  theme(text = element_text(size=12),
+        strip.text.x = element_text(size = 12),
+        legend.position = "bottom",
+        panel.spacing = unit(1.5, "lines")) 
+
+Figure2
+
+ggsave("Figure2.png", Figure2,
+       width = 9, height = 6)
 ```
 
 ```{r Table 2, results = "asis", cache = TRUE}
