@@ -1,9 +1,9 @@
-base
 rmarkdown
 knitr
 papaja
 kableExtra
 english
+linguisticsdown
 here
 tidyverse
 ggplot2
@@ -17,10 +17,11 @@ forcats
 tidylog
 wordbankr
 matrixStats
+Matrix
+lme4
+lmerTest
 patchwork
 gridExtra
 ggpubr
 broom
-Matrix
-lme4
-lmerTest
+DHARMa
