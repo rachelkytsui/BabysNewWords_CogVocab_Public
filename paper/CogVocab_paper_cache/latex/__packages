@@ -1,5 +1,6 @@
 rmarkdown
 knitr
+tinylabels
 papaja
 kableExtra
 english
