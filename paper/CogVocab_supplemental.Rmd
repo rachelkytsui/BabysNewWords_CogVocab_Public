@@ -367,7 +367,7 @@ n_maternal_uni_stringent <- clean_demog_stringent %>%
 
 ```
 
-On average, this group of `r  paste(n_subject_both_administration_stringent)` infants were exposed to English `r round(mean_langexp_stringent$mean_exposure[mean_langexp_stringent$language=="exposure_eng"],1)`% of the time ($SD$ = `r round(mean_langexp_stringent$sd_exposure[mean_langexp_stringent$language=="exposure_eng"],1)`, range = `r range_langexp_stringent$min_exposure[range_langexp_stringent$language=="mean_exposure_eng"]` – `r range_langexp_stringent$max_exposure[range_langexp_stringent$language=="mean_exposure_eng"]`), to French `r round(mean_langexp_stringent$mean_exposure[mean_langexp_stringent$language=="exposure_fr"],1)`% of the time ($SD$ = `r round(mean_langexp_stringent$sd_exposure[mean_langexp_stringent$language=="exposure_fr"],1)`, range = `r range_langexp_stringent$min_exposure[range_langexp_stringent$language=="mean_exposure_fr"]` – `r range_langexp_stringent$max_exposure[range_langexp_stringent$language=="mean_exposure_fr"]`), and to a third language `r round(mean_langexp_stringent$mean_exposure[mean_langexp_stringent$language=="exposure_other"],1)`% of the time (SD = `r round(mean_langexp_stringent$sd_exposure[mean_langexp_stringent$language=="exposure_other"],1)`, range = `r range_langexp_stringent$min_exposure[range_langexp_stringent$language=="mean_exposure_other"]` – `r range_langexp_stringent$max_exposure[range_langexp_stringent$language=="mean_exposure_other"]`). `r paste(mean_engdom_stringent$number[1])` of the bilingual infants were English-dominant ($M$ = `r round(mean_engdom_stringent$mean_exposure[mean_engdom_stringent$language=="exposure_eng"],1)`% English exposure, $SD$ = `r round(mean_engdom_stringent$sd_exposure[mean_engdom_stringent$language=="exposure_eng"],1)`, range = `r range_engdom_stringent$min_exposure[range_engdom_stringent$language=="mean_exposure_eng"]` – `r range_engdom_stringent$max_exposure[range_engdom_stringent$language=="mean_exposure_eng"]`), `r paste(mean_frdom_stringent$number[1])` were French-dominant  ($M$ = `r round(mean_frdom_stringent$mean_exposure[mean_frdom_stringent$language=="exposure_fr"],1)`% French exposure, $SD$ = `r round(mean_frdom_stringent$sd_exposure[mean_frdom_stringent$language=="exposure_fr"],1)`, range = `r range_frdom_stringent$min_exposure[range_frdom_stringent$language=="mean_exposure_fr"]` – `r range_frdom_stringent$max_exposure[range_frdom_stringent$language=="mean_exposure_fr"]`), and `r paste(n_equalexp_stringent)` reported equal exposure to both English and French. The average maternal education level was `r round(mean_maternaledu_stringent$mean_edu_level,2)` years ($SD$ = `r round(mean_maternaledu_stringent$sd_edu_level,2)`, range = `r round(mean_maternaledu_stringent$min_edu_level)` – `r round(mean_maternaledu_stringent$max_edu_level)`), and `r round(n_maternal_uni_stringent$percentage[n_maternal_uni_stringent$university_degree=="1"],2)`% of the mothers had completed a university degree or higher. 
+On average, this group of `r  paste(n_subject_both_administration_stringent)` infants were exposed to English `r round(mean_langexp_stringent$mean_exposure[mean_langexp_stringent$language=="exposure_eng"],1)`% of the time ($SD$ = `r round(mean_langexp_stringent$sd_exposure[mean_langexp_stringent$language=="exposure_eng"],1)`, range = `r range_langexp_stringent$min_exposure[range_langexp_stringent$language=="mean_exposure_eng"]` – `r range_langexp_stringent$max_exposure[range_langexp_stringent$language=="mean_exposure_eng"]`), to French `r round(mean_langexp_stringent$mean_exposure[mean_langexp_stringent$language=="exposure_fr"],1)`% of the time ($SD$ = `r round(mean_langexp_stringent$sd_exposure[mean_langexp_stringent$language=="exposure_fr"],1)`, range = `r range_langexp_stringent$min_exposure[range_langexp_stringent$language=="mean_exposure_fr"]` – `r range_langexp_stringent$max_exposure[range_langexp_stringent$language=="mean_exposure_fr"]`), and to a third language `r round(mean_langexp_stringent$mean_exposure[mean_langexp_stringent$language=="exposure_other"],1)`% of the time ($SD$ = `r round(mean_langexp_stringent$sd_exposure[mean_langexp_stringent$language=="exposure_other"],1)`, range = `r range_langexp_stringent$min_exposure[range_langexp_stringent$language=="mean_exposure_other"]` – `r range_langexp_stringent$max_exposure[range_langexp_stringent$language=="mean_exposure_other"]`). `r paste(mean_engdom_stringent$number[1])` of the bilingual infants were English-dominant ($M$ = `r round(mean_engdom_stringent$mean_exposure[mean_engdom_stringent$language=="exposure_eng"],1)`% English exposure, $SD$ = `r round(mean_engdom_stringent$sd_exposure[mean_engdom_stringent$language=="exposure_eng"],1)`, range = `r range_engdom_stringent$min_exposure[range_engdom_stringent$language=="mean_exposure_eng"]` – `r range_engdom_stringent$max_exposure[range_engdom_stringent$language=="mean_exposure_eng"]`), `r paste(mean_frdom_stringent$number[1])` were French-dominant  ($M$ = `r round(mean_frdom_stringent$mean_exposure[mean_frdom_stringent$language=="exposure_fr"],1)`% French exposure, $SD$ = `r round(mean_frdom_stringent$sd_exposure[mean_frdom_stringent$language=="exposure_fr"],1)`, range = `r range_frdom_stringent$min_exposure[range_frdom_stringent$language=="mean_exposure_fr"]` – `r range_frdom_stringent$max_exposure[range_frdom_stringent$language=="mean_exposure_fr"]`), and `r paste(n_equalexp_stringent)` reported equal exposure to both English and French. The average maternal education level was `r round(mean_maternaledu_stringent$mean_edu_level,2)` years ($SD$ = `r round(mean_maternaledu_stringent$sd_edu_level,2)`, range = `r round(mean_maternaledu_stringent$min_edu_level)` – `r round(mean_maternaledu_stringent$max_edu_level)`), and `r round(n_maternal_uni_stringent$percentage[n_maternal_uni_stringent$university_degree=="1"],2)`% of the mothers had completed a university degree or higher. 
 
 ## Descriptive Measures of Number of Words Produced
 ```{r include=FALSE, cache=TRUE}
@@ -406,6 +406,31 @@ keepers_cognate_full_wide <- keepers_cognate_full %>%
          percent_all_TE_acquired = total_all_TE_acquired/537*100) %>%
   ungroup()
 
+keepers_cognate_full_stringent <- keepers_cognate_full %>%
+  anti_join(exceed_25_75_langexp)
+
+keepers_cognate_full_wide_stringent <- keepers_cognate_full_wide %>%
+  anti_join(exceed_25_75_langexp)
+
+# descriptives
+## mean total words acquired
+full_mean_total_stringent <- keepers_cognate_full_wide_stringent %>%
+  select(subject_id, n_months, total_eng_acquired, total_fr_acquired, total_acquired, percent_word_acquired, 
+         total_all_TE_acquired, percent_all_TE_acquired) %>%
+  distinct(subject_id, n_months, .keep_all = TRUE) %>%
+  pivot_longer(-c(subject_id, n_months), names_to = "type", values_to = "number") %>%
+  group_by(type) %>%
+  summarize(n_subject = n_distinct(subject_id),
+            mean_number = mean(number, na.rm=T),
+            sd_number = sd(number, na.rm=T),
+            min_number = min(number, na.rm=T),
+            max_number = max(number, na.rm=T))
+
+```
+
+Out of the complete list, bilingual infants on average produced a total of `r round(full_mean_total_stringent$mean_number[full_mean_total_stringent$type=="total_acquired"])` words ($SD$ = `r round(full_mean_total_stringent$sd_number[full_mean_total_stringent$type=="total_acquired"])`), with a range of `r round(full_mean_total_stringent$min_number[full_mean_total_stringent$type=="total_acquired"])` – `r round(full_mean_total_stringent$max_number[full_mean_total_stringent$type=="total_acquired"])` words, which constituted `r round(full_mean_total_stringent$mean_number[full_mean_total_stringent$type=="percent_word_acquired"],2)`% of the words on the complete list. Moreover, they produced an average of `r round(full_mean_total_stringent$mean_number[full_mean_total_stringent$type=="total_all_TE_acquired"])` complete translation equivalent pairs where both the English and French words were produced ($SD$ = `r round(full_mean_total_stringent$sd_number[full_mean_total_stringent$type=="total_all_TE_acquired"],2)`, range = `r round(full_mean_total_stringent$min_number[full_mean_total_stringent$type=="total_all_TE_acquired"])` – `r round(full_mean_total_stringent$max_number[full_mean_total_stringent$type=="total_all_TE_acquired"])`), which constituted `r round(full_mean_total_stringent$mean_number[full_mean_total_stringent$type=="percent_all_TE_acquired"],2)`% of the translation equivalent pairs on the complete list. 	
+
+```{r include=FALSE, cache=TRUE}
 # matched list
 keepers_cognate_matched <- read.csv(here::here("data_keepers/public_keepers_cognate_matched.csv"))
 
@@ -436,38 +461,15 @@ keepers_cognate_matched_wide <- keepers_cognate_matched %>%
   mutate(total_all_TE_acquired = sum(total_TE_acquired, na.rm=T),
          percent_all_TE_acquired = total_all_TE_acquired/162*100) %>%
   ungroup()
-```
-
-```{r include=FALSE, cache=TRUE}
-# ---------- 25-75% language exposure criterion: Analysis 1 ----------
-
-keepers_cognate_full_stringent <- keepers_cognate_full %>%
-  anti_join(exceed_25_75_langexp)
 
 keepers_cognate_matched_stringent <- keepers_cognate_matched %>%
-  anti_join(exceed_25_75_langexp)
-  
-keepers_cognate_full_wide_stringent <- keepers_cognate_full_wide %>%
   anti_join(exceed_25_75_langexp)
 
 keepers_cognate_matched_wide_stringent <- keepers_cognate_matched_wide %>%
   anti_join(exceed_25_75_langexp)
 
-
 # descriptives
 ## mean total words acquired
-full_mean_total_stringent <- keepers_cognate_full_wide_stringent %>%
-  select(subject_id, n_months, total_eng_acquired, total_fr_acquired, total_acquired, percent_word_acquired, 
-         total_all_TE_acquired, percent_all_TE_acquired) %>%
-  distinct(subject_id, n_months, .keep_all = TRUE) %>%
-  pivot_longer(-c(subject_id, n_months), names_to = "type", values_to = "number") %>%
-  group_by(type) %>%
-  summarize(n_subject = n_distinct(subject_id),
-            mean_number = mean(number, na.rm=T),
-            sd_number = sd(number, na.rm=T),
-            min_number = min(number, na.rm=T),
-            max_number = max(number, na.rm=T))
-
 matched_mean_total_stringent <- keepers_cognate_matched_wide_stringent %>%
   select(subject_id, n_months, total_eng_acquired, total_fr_acquired, total_acquired, percent_word_acquired, 
          total_all_TE_acquired, percent_all_TE_acquired) %>%
@@ -480,12 +482,24 @@ matched_mean_total_stringent <- keepers_cognate_matched_wide_stringent %>%
             min_number = min(number, na.rm=T),
             max_number = max(number, na.rm=T))
 
+```
+
+As for the matched list, bilingual infants produced an average of `r round(matched_mean_total_stringent$mean_number[full_mean_total_stringent$type=="total_acquired"])` words ($SD$ = `r round(matched_mean_total_stringent$sd_number[full_mean_total_stringent$type=="total_acquired"],2)`, range = `r round(matched_mean_total_stringent$min_number[full_mean_total_stringent$type=="total_acquired"])` – `r round(matched_mean_total_stringent$max_number[full_mean_total_stringent$type=="total_acquired"])`), which constituted `r round(matched_mean_total_stringent$mean_number[full_mean_total_stringent$type=="percent_word_acquired"],2)`% of the words on the matched list. On average, bilingual infants produced a total of `r round(matched_mean_total_stringent$mean_number[full_mean_total_stringent$type=="total_all_TE_acquired"])` complete translation equivalent pairs ($SD$ = `r round(matched_mean_total_stringent$sd_number[full_mean_total_stringent$type=="total_all_TE_acquired"],2)`, range = `r round(matched_mean_total_stringent$min_number[full_mean_total_stringent$type=="total_all_TE_acquired"])` – `r round(matched_mean_total_stringent$max_number[full_mean_total_stringent$type=="total_all_TE_acquired"])`), which constituted 8.8% of translation equivalent pairs on the matched list. 
+
+## Dependent Variable 1: Cognate Words Versus Non-Cognate Words
+```{r include=FALSE, cache=TRUE}
 # Dependent Variable 1: Cognate Words Versus Non-Cognate Words
 ## average age in the sample
 mean_age_stringent <- keepers_cognate_full_stringent %>% 
   distinct(subject_id, .keep_all = T) %>% 
   summarize(mean_age = mean(age_days, na.rm = T))
+```
 
+Following the procedure in the main analysis, we first looked at the total proportion of words infants produced on the relevant list. Our predictor variables were age (in days) and cognate status. Age was continuous and was centered at the mean age of `r round(mean_age_stringent,1)` days (approximately `r round(mean_age_stringent/(365/12))` months) for ease of interpretation. Cognate status was categorical with two levels (cognates versus non-cognates) with non-cognates as the reference level. We ran separate logistic regression models for the complete and matched lists. The initial model specification included a random slope of age and cognate status by participants, which was pruned to a random intercept to achieve model convergence. The final model was:
+proportion_word ~ age * cognate_status + (1|participant)
+
+### Complete List
+```{r include=FALSE, cache=TRUE}
 ## Complete List
 ### calculate to see how many cognate or non-cognate words have been produced (i.e., either word acquired only in one language or words acquired in both language)
 keepers_cognate_full_notPair_stringent <- keepers_cognate_full_stringent %>%
@@ -551,7 +565,12 @@ stringent_Analysis1_full_logistic_model_coefs <- summary(stringent_Analysis1_ful
 
 rownames(stringent_Analysis1_full_logistic_model_coefs) <- c("Intercept", "cognate_status", "age_days", 
                      "cognate_status * age_days") 
+```
 
+Out of the complete list which contained 262 cognate words (i.e., adding the 131 English cognate words and 131 French cognate words) and 812 non-cognate words (i.e., adding the 406 English non-cognate words and 406 French non-cognate words), bilingual infants produced an average of `r round(full_mean_cognates_stringent$mean_n_word[full_mean_cognates_stringent$cognate_status=="cognate"])` cognate words ($SD$ = `r round(full_mean_cognates_stringent$sd_n_word[full_mean_cognates_stringent$cognate_status=="cognate"],2)`, range = `r round(full_mean_cognates_stringent$min_n_word[full_mean_cognates_stringent$cognate_status=="cognate"])` – `r round(full_mean_cognates_stringent$max_n_word[full_mean_cognates_stringent$cognate_status=="cognate"])`) and `r round(full_mean_cognates_stringent$mean_n_word[full_mean_cognates_stringent$cognate_status=="non-cognate"])` non-cognate words ($SD$ = `r round(full_mean_cognates_stringent$sd_n_word[full_mean_cognates_stringent$cognate_status=="non-cognate"],2)`, range = `r round(full_mean_cognates_stringent$min_n_word[full_mean_cognates_stringent$cognate_status=="non-cognate"])` – `r round(full_mean_cognates_stringent$max_n_word[full_mean_cognates_stringent$cognate_status=="non-cognate"])`). The proportion of cognate words produced was `r round(full_mean_cognates_prop_stringent$mean_prop_word[full_mean_cognates_prop_stringent$cognate_status=="cognate"],2)` ($SD$ = `r round(full_mean_cognates_prop_stringent$sd_prop_word[full_mean_cognates_prop_stringent$cognate_status=="cognate"],2)`, range = `r round(full_mean_cognates_prop_stringent$min_prop_word[full_mean_cognates_prop_stringent$cognate_status=="cognate"],2)` – `r round(full_mean_cognates_prop_stringent$max_prop_word[full_mean_cognates_prop_stringent$cognate_status=="cognate"],2)`), whereas the proportion of non-cognate words produced was `r round(full_mean_cognates_prop_stringent$mean_prop_word[full_mean_cognates_prop_stringent$cognate_status=="non-cognate"],2)` ($SD$ = `r round(full_mean_cognates_prop_stringent$sd_prop_word[full_mean_cognates_prop_stringent$cognate_status=="non-cognate"],2)`, range = `r round(full_mean_cognates_prop_stringent$min_prop_word[full_mean_cognates_prop_stringent$cognate_status=="non-cognate"],2)` – `r round(full_mean_cognates_prop_stringent$max_prop_word[full_mean_cognates_prop_stringent$cognate_status=="non-cognate"],2)`). Table S1 shows the coefficient estimates for the model and Figure S1 Panel A visualizes the model. Similar to the results reported in the main analysis, we observed significant main effects of age and cognate status, as well as a significant interaction. Overall, the pattern of results was the same as that of the main analysis.
+
+### Matched List
+```{r include=FALSE, cache=TRUE}
 ## Matched List
 ### calculate to see how many cognate or non-cognate words have been produced (i.e., either word acquired only in one language or words acquired in both language)
 keepers_cognate_matched_notPair_stringent <- keepers_cognate_matched_stringent %>%
@@ -615,6 +634,8 @@ rownames(stringent_Analysis1_matched_logistic_model_coefs) <- c("Intercept", "co
 
 ```
 
+Out of the 162 cognate (i.e., adding the 81 English cognate words and 81 French cognate words) and 162 non-cognate words (i.e., adding the 81 English non-cognate words and 81 French non-cognate words) on the matched list, bilingual infants produced an average of `r round(matched_mean_cognates_stringent$mean_n_word[matched_mean_cognates_stringent$cognate_status=="cognate"])` cognate words ($SD$ = `r round(matched_mean_cognates_stringent$sd_n_word[matched_mean_cognates_stringent$cognate_status=="cognate"],2)`, range = `r round(matched_mean_cognates_stringent$min_n_word[matched_mean_cognates_stringent$cognate_status=="cognate"])` – `r round(matched_mean_cognates_stringent$max_n_word[matched_mean_cognates_stringent$cognate_status=="cognate"])`) and `r round(matched_mean_cognates_stringent$mean_n_word[matched_mean_cognates_stringent$cognate_status=="non-cognate"])` non-cognate words ($SD$ = `r round(matched_mean_cognates_stringent$sd_n_word[matched_mean_cognates_stringent$cognate_status=="non-cognate"],2)`, range = `r round(matched_mean_cognates_stringent$min_n_word[matched_mean_cognates_stringent$cognate_status=="non-cognate"])` – `r round(matched_mean_cognates_stringent$max_n_word[matched_mean_cognates_stringent$cognate_status=="non-cognate"])`). The overall mean proportion of cognate words produced was `r round(matched_mean_cognates_prop_stringent$mean_prop_word[matched_mean_cognates_prop_stringent$cognate_status=="cognate"],2)` of words ($SD$ = `r round(matched_mean_cognates_prop_stringent$sd_prop_word[matched_mean_cognates_prop_stringent$cognate_status=="cognate"],2)`, range = `r round(matched_mean_cognates_prop_stringent$min_prop_word[matched_mean_cognates_prop_stringent$cognate_status=="cognate"],2)` – `r round(matched_mean_cognates_prop_stringent$max_prop_word[matched_mean_cognates_prop_stringent$cognate_status=="cognate"],2)`), whereas the proportion of non-cognate words produced was `r round(matched_mean_cognates_prop_stringent$mean_prop_word[matched_mean_cognates_prop_stringent$cognate_status=="non-cognate"],2)` ($SD$ = `r round(matched_mean_cognates_prop_stringent$sd_prop_word[matched_mean_cognates_prop_stringent$cognate_status=="non-cognate"],2)`, range = `r round(matched_mean_cognates_prop_stringent$min_prop_word[matched_mean_cognates_prop_stringent$cognate_status=="non-cognate"],2)` – `r round(matched_mean_cognates_prop_stringent$max_prop_word[matched_mean_cognates_prop_stringent$cognate_status=="non-cognate"],2)`). Table S1 also shows the coefficient estimates for the matched list model and Figure S1 Panel B visualizes the model. There were significant effects of age and cognate status, once again showing that infants produced a greater proportion of cognates than non-cognates on the matched list; there was no interaction between cognate status and age. Again, we observed the same patterns as those reported in the main analysis. 
+
 ```{r FigS1, fig.cap="Proportion of words produced by age and cognate status, with Panel A representing the complete list and Panel B representing the matched list. Note that the black dashed line represents the mean age of 547.6 days which serves as the reference level for age in our models.", echo=FALSE, dpi=600, fig.align='center', fig.height=4, out.width="120%", cache = TRUE}
 
 prop_word_full_stringent <- keepers_cognate_full_notPair_stringent %>%
@@ -651,8 +672,8 @@ stringent_Figure1 <- right_join(prop_word_full_stringent, prop_word_matched_stri
 
 stringent_Figure1
 
-ggsave("stringent_Figure1.png", stringent_Figure1,
-       width = 9, height = 6)
+#ggsave("stringent_Figure1.png", stringent_Figure1,
+#       width = 9, height = 6)
 
 ```
 
@@ -667,9 +688,12 @@ papaja::apa_table(TableS1, format.args = list(digits = 3),
                   landscape = FALSE)
 ```
 
-```{r include=FALSE, cache=TRUE}
-# ---------- 25-75% language exposure criterion: Analysis 2 ----------
+## Dependent Variable 2: Cognate Pairs Versus Non-Cognate Pairs
+Again, following the procedure reported in the main analysis, the proportion of translation equivalent pairs produced was entered as the dependent variable in the following analysis. Age and cognate status were entered as our predictor variables, with non-cognates set as the reference level, and we ran separate logistic models for the complete and matched lists. The initial model specification, which included a random effect of age and cognate status by participants, had to be reduced for model convergence; therefore, the final model was:
+proportion_pair ~ age * cognate_status + (1|participant)
 
+### Complete List
+```{r include=FALSE, cache=TRUE}
 # Dependent Variable 2: Cognate Pairs Versus Non-Cognate Pairs
 
 ## Complete List
@@ -724,8 +748,12 @@ stringent_Analysis2_full_logistic_model_coefs <- summary(stringent_Analysis2_ful
 
 rownames(stringent_Analysis2_full_logistic_model_coefs) <- c("Intercept", "cognate_status", "age_days", 
                      "cognate_status * age_days") 
+```
 
+Out of the complete list which contained 537 translation equivalent pairs (131 cognates and 406 non-cognates), bilingual infants produced an average of `r round(full_mean_total_TE_stringent$mean_TE[full_mean_total_TE_stringent$cognate_status=="cognate"])` cognate pairs ($SD$ = `r round(full_mean_total_TE_stringent$sd_TE[full_mean_total_TE_stringent$cognate_status=="cognate"],2)`, range = `r round(full_mean_total_TE_stringent$min_TE[full_mean_total_TE_stringent$cognate_status=="cognate"])` – `r round(full_mean_total_TE_stringent$max_TE[full_mean_total_TE_stringent$cognate_status=="cognate"])`) and `r round(full_mean_total_TE_stringent$mean_TE[full_mean_total_TE_stringent$cognate_status=="non-cognate"])` non-cognate pairs ($SD$ = `r round(full_mean_total_TE_stringent$sd_TE[full_mean_total_TE_stringent$cognate_status=="non-cognate"],2)`, range = `r round(full_mean_total_TE_stringent$min_TE[full_mean_total_TE_stringent$cognate_status=="non-cognate"])` – `r round(full_mean_total_TE_stringent$max_TE[full_mean_total_TE_stringent$cognate_status=="non-cognate"])`). The proportion of cognate pairs produced was `r round(full_mean_prop_TE_stringent$mean_TE[full_mean_prop_TE_stringent$cognate_status=="cognate"],2)` ($SD$ = `r round(full_mean_prop_TE_stringent$sd_TE[full_mean_prop_TE_stringent$cognate_status=="cognate"],2)`, range = `r round(full_mean_prop_TE_stringent$min_TE[full_mean_prop_TE_stringent$cognate_status=="cognate"],2)` – `r round(full_mean_prop_TE_stringent$max_TE[full_mean_prop_TE_stringent$cognate_status=="cognate"],2)`) whereas the proportion of non-cognate pairs produced was `r round(full_mean_prop_TE_stringent$mean_TE[full_mean_prop_TE_stringent$cognate_status=="non-cognate"],2)` ($SD$ = `r round(full_mean_prop_TE_stringent$sd_TE[full_mean_prop_TE_stringent$cognate_status=="non-cognate"],2)`, range = `r round(full_mean_prop_TE_stringent$min_TE[full_mean_prop_TE_stringent$cognate_status=="non-cognate"],2)` – `r round(full_mean_prop_TE_stringent$max_TE[full_mean_prop_TE_stringent$cognate_status=="non-cognate"],2)`). Table S2 shows the coefficient estimates for the model and Figure S2 Panel A visualizes the model. Again, similar to the pattern reported in the main analysis, there were significant effects of age and cognate status and a significant interaction between age and cognate status. Therefore, we observed the same findings as in the main analysis, where overall infants produced a greater proportion of cognates than non-cognates and there is a slightly steeper learning curve for non-cognates than cognates. 
 
+### Matched List
+```{r include=FALSE, cache=TRUE}
 ## Matched List
 ### mean number of cognates/non-cognates acquired
 #### total number
@@ -780,6 +808,8 @@ rownames(stringent_Analysis2_matched_logistic_model_coefs) <- c("Intercept", "co
 
 ```
 
+Out of the 162 translation equivalent pairs, bilingual infants produced an average of `r round(matched_mean_total_TE_stringent$mean_TE[matched_mean_total_TE_stringent$cognate_status=="cognate"])` cognate pairs ($SD$ = `r round(matched_mean_total_TE_stringent$sd_TE[matched_mean_total_TE_stringent$cognate_status=="cognate"],2)`, range = `r round(matched_mean_total_TE_stringent$min_TE[matched_mean_total_TE_stringent$cognate_status=="cognate"])` – `r round(matched_mean_total_TE_stringent$max_TE[matched_mean_total_TE_stringent$cognate_status=="cognate"])`) and `r round(matched_mean_total_TE_stringent$mean_TE[matched_mean_total_TE_stringent$cognate_status=="non-cognate"])` non-cognate pairs ($SD$ = `r round(matched_mean_total_TE_stringent$sd_TE[matched_mean_total_TE_stringent$cognate_status=="non-cognate"],2)`, range = `r round(matched_mean_total_TE_stringent$min_TE[matched_mean_total_TE_stringent$cognate_status=="non-cognate"])` – `r round(matched_mean_total_TE_stringent$max_TE[matched_mean_total_TE_stringent$cognate_status=="non-cognate"])`). The proportion of cognate pairs produced was `r round(matched_mean_prop_TE_stringent$mean_TE[matched_mean_prop_TE_stringent$cognate_status=="cognate"],2)` ($SD$ = `r round(matched_mean_prop_TE_stringent$sd_TE[matched_mean_prop_TE_stringent$cognate_status=="cognate"],2)`, range = `r round(matched_mean_prop_TE_stringent$min_TE[matched_mean_prop_TE_stringent$cognate_status=="cognate"],2)` – `r round(matched_mean_prop_TE_stringent$max_TE[matched_mean_prop_TE_stringent$cognate_status=="cognate"],2)`) and the proportion of non-cognate pairs produced was `r round(matched_mean_prop_TE_stringent$mean_TE[matched_mean_prop_TE_stringent$cognate_status=="non-cognate"],2)` ($SD$ = `r round(matched_mean_prop_TE_stringent$sd_TE[matched_mean_prop_TE_stringent$cognate_status=="non-cognate"],2)`, range = `r round(matched_mean_prop_TE_stringent$min_TE[matched_mean_prop_TE_stringent$cognate_status=="non-cognate"],2)` – `r round(matched_mean_prop_TE_stringent$max_TE[matched_mean_prop_TE_stringent$cognate_status=="non-cognate"],2)`). The coefficient estimates for the matched list model is shown in Table S2, and Figure S2 Panel B visualizes the model. Again, we observed similar pattern of results as those reported in the main analysis, with significant effects of age and cognate status but no significant interaction between age and cognate status. 
+
 ```{r FigS2, fig.cap="Proportion of translation equivalent pairs produced by age and cognate status, with Panel A representing the complete list and Panel B representing the matched list. Note that the black dashed line represents the mean age of 547.6 days which serves as the reference level for age in our models.", echo=FALSE, dpi=600, fig.align='center', fig.height=4, out.width="120%", cache = TRUE}
 
 prop_TE_full_stringent <- keepers_cognate_full_wide_stringent %>%
@@ -818,8 +848,19 @@ stringent_Figure2 <- right_join(prop_TE_full_stringent, prop_TE_matched_stringen
 
 stringent_Figure2
 
-ggsave("stringent_Figure2.png", stringent_Figure2,
-       width = 9, height = 6)
+#ggsave("stringent_Figure2.png", stringent_Figure2,
+#       width = 9, height = 6)
+```
+
+```{r Table S2, results = "asis", cache = TRUE}
+TableS2 <- cbind(stringent_Analysis2_full_logistic_model_coefs, stringent_Analysis2_matched_logistic_model_coefs)
+
+papaja::apa_table(TableS2, format.args = list(digits = 3),
+                  col.names =c("","Estimate", "$SE$","$z$","$p$","Estimate", "$SE$","$z$","$p$"),
+                  align=c("l","c","c","c","c","c","c","c", "c"),
+                  col_spanners = list("Complete list" = c(2,5), "Matched list" = c(6,9)),
+                  caption="Table S2. Coefficient estimates from the mixed-effects logistic models predicting proportion of translation equivalent pairs produced.",
+                  landscape = FALSE)
 ```
 
 ## Summary of Analyses
