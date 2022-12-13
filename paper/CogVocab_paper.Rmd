@@ -40,7 +40,7 @@ abstract: |
 
  
 
-keywords          : "bilingualism, infants, cognates, translation equivalents, phonological similarity, expressive vocabulary development"
+keywords          : "bilingual infants, cognates, translation equivalents, phonological similarity, expressive vocabulary development"
 
 wordcount         : 
 
@@ -81,6 +81,7 @@ library(patchwork)
 library(gridExtra)
 library("ggpubr")
 library(broom)
+library(DHARMa)
 
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, cache = TRUE)
 
@@ -220,7 +221,7 @@ n_avg_entries <- clean_demog  %>%
 
 The current study comprised data from `r total_n` French–English bilingual infants (`r n_female` females) collected from August 2020 to May 2021, as part of a larger ongoing longitudinal study which aims to collect data from 100 bilingual infants. Participating infants were aged between 16 and 20 months at the onset of participation (mean starting age = `r round(mean_age_1st_entry$mean_age,2)` months, SD = `r round(mean_age_1st_entry$sd_age,2)`, range = `r round(mean_age_1st_entry$min_age,2)` – `r round(mean_age_1st_entry$max_age,2)`), and were aged between `r round(mean_age_final_entry$min_age,0)` to `r round(mean_age_final_entry$max_age,0)` months at their final time of participation (M = `r round(mean_age_final_entry$mean_age,2)` months, SD = `r round(mean_age_final_entry$sd_age,2)`, range = `r round(mean_age_final_entry$min_age,2)` – `r round(mean_age_final_entry$max_age,2)`). Participants were recruited from Québec, Canada through government birth lists, social media, and participating families’ referrals. Inclusion criteria were the following: full-term pregnancy (i.e., at least 37 weeks of gestation), normal birth weight (> 2500 grams), and no reported developmental delays or any hearing or vision problems. Bilingual infants were defined as those exposed to each of English and French for at least 10% and at most 90% of the time over the course of their lives since birth, with less than 10% of exposure to a third language[^2]. To capture a wider range of bilingual experience, the language exposure range in this study was wider than some studies (e.g., Morin-Lessard & Byers-Heinlein, 2019; Sebastián-Gallés & Bosch, 2009) but similar to the range used in others (e.g., Hoff & Ribot, 2017; Place & Hoff, 2011).
 
-[^2]: We have also run the analyses using a stricter 25%-75% inclusion criterion. The results are reported in the supplemental materials. 
+[^2]: We have also run the analyses using a stricter 25%–75% inclusion criterion. The results are reported in the supplemental materials. 
 
 ```{r include=FALSE, cache=TRUE}
 # Average language exposure (weighted mean is calculated as participants contributed different number of LEQ update data)
@@ -383,7 +384,7 @@ n_maternal_uni <- clean_demog %>%
             percentage = n/sum(n)*100)
 ```
 
-In total, parents completed `r n_eng_administration` English CDI administrations and `r n_fr_administration` French CDI administrations. We retained only cases where both the English and French were completed at the same time point to be able to determine infants’ translation equivalent knowledge. This left us with `r n_both_administration` completed administrations from `r length(unique(public_keepers_cognate_full$subject_id))` infants. `r english::Words(length(unique(public_keepers_cognate_full$subject_id)) - n_multiple_entry)` infants contributed data at only one time point, and `r n_multiple_entry` infants contributed data at more than one time point, with participants contributing an average of `r round(n_avg_entries$mean_entry,1)` measurements for each language (SD = `r round(n_avg_entries$sd_entry,2)`, range = `r n_avg_entries$min_entry` – `r n_avg_entries$max_entry`). On average across the `r n_both_administration` administrations, participating infants were exposed to English `r round(mean_langexp[1,2],1)`% of the time (SD = `r round(mean_langexp[1,3],1)`, range = `r round(range_langexp[1,2],0)` – `r round(range_langexp[1,3],0)`), to French `r round(mean_langexp[2,2],1)`% of the time (SD = `r round(mean_langexp[2,3],1)`, range = `r round(range_langexp[2,2],0)` – `r round(range_langexp[2,3],0)`), and to a third language `r round(mean_langexp[3,2],1)`% of the time (SD = `r round(mean_langexp[3,3],1)`, range = `r round(range_langexp[3,2],0)` – `r round(range_langexp[3,3],0)`). Of the `r length(unique(public_keepers_cognate_full$subject_id))` bilingual infants, `r mean_engdom[1,2]` were English-dominant (M = `r round(mean_engdom[1,3],1)`% English exposure, SD = `r round(mean_engdom[1,4],1)`, range = `r round(range_engdom[1,3],0)` – `r round(range_engdom[1,4],0)`), `r mean_frdom[1,2]` were French-dominant (M = `r round(mean_frdom[2,3],1)`% French exposure, SD = `r round(mean_frdom[2,4],1)`, range = `r round(range_frdom[2,3],0)` – `r round(range_frdom[2,4],0)`), and `r n_equalexp` reported equal exposure to both English and French. The average maternal education level was `r round(mean_maternaledu[1,2],2)` years (SD = `r round(mean_maternaledu[1,3],2)`, range = `r round(mean_maternaledu[1,4],2)` – `r round(mean_maternaledu[1,5],2)`), and `r round(n_maternal_uni[2,3],1)`% of the mothers had completed a university degree or higher.
+In total, parents completed `r n_eng_administration` English CDI administrations and `r n_fr_administration` French CDI administrations, which constitutes a large dataset particularly in the context of research with bilingual infants (Rocha-Hidalgo & Barr, 2022). We retained only cases where both the English and French were completed at the same time point to be able to determine infants’ translation equivalent knowledge. This left us with `r n_both_administration` completed administrations from `r length(unique(public_keepers_cognate_full$subject_id))` infants. `r english::Words(length(unique(public_keepers_cognate_full$subject_id)) - n_multiple_entry)` infants contributed data at only one time point, and `r n_multiple_entry` infants contributed data at more than one time point, with participants contributing an average of `r round(n_avg_entries$mean_entry,1)` measurements for each language (SD = `r round(n_avg_entries$sd_entry,2)`, range = `r n_avg_entries$min_entry` – `r n_avg_entries$max_entry`). On average across the `r n_both_administration` administrations, participating infants were exposed to English `r round(mean_langexp[1,2],1)`% of the time (SD = `r round(mean_langexp[1,3],1)`, range = `r round(range_langexp[1,2],0)` – `r round(range_langexp[1,3],0)`), to French `r round(mean_langexp[2,2],1)`% of the time (SD = `r round(mean_langexp[2,3],1)`, range = `r round(range_langexp[2,2],0)` – `r round(range_langexp[2,3],0)`), and to a third language `r round(mean_langexp[3,2],1)`% of the time (SD = `r round(mean_langexp[3,3],1)`, range = `r round(range_langexp[3,2],0)` – `r round(range_langexp[3,3],0)`). Of the `r length(unique(public_keepers_cognate_full$subject_id))` bilingual infants, `r mean_engdom[1,2]` were English-dominant (M = `r round(mean_engdom[1,3],1)`% English exposure, SD = `r round(mean_engdom[1,4],1)`, range = `r round(range_engdom[1,3],0)` – `r round(range_engdom[1,4],0)`), `r mean_frdom[1,2]` were French-dominant (M = `r round(mean_frdom[2,3],1)`% French exposure, SD = `r round(mean_frdom[2,4],1)`, range = `r round(range_frdom[2,3],0)` – `r round(range_frdom[2,4],0)`), and `r n_equalexp` reported equal exposure to both English and French. The average maternal education level was `r round(mean_maternaledu[1,2],2)` years (SD = `r round(mean_maternaledu[1,3],2)`, range = `r round(mean_maternaledu[1,4],2)` – `r round(mean_maternaledu[1,5],2)`), and `r round(n_maternal_uni[2,3],1)`% of the mothers had completed a university degree or higher.
 
 ## Measures
 ### Web-based MacArthur-Bates Communicative Development Inventory: Words and Sentences (Web-CDI)
@@ -472,7 +473,7 @@ From the list of 611 translation equivalents, we further excluded any translatio
 
 Following this procedure identified a complete list of `r nrow(CognateList_full_clean)` translation equivalents (`r nrow(CognateList_full_clean[which(CognateList_full_clean$cognate_status=="cognate"),])` cognates[^3] and `r nrow(CognateList_full_clean[which(CognateList_full_clean$cognate_status=="non-cognate"),])` non-cognates), which were compared in a first set of analyses. However, note that the cognates and non-cognates in this list could vary systematically on correlated factors including variations in parts of speech and differences in age of acquisition of certain words between languages. Within the full list of translation equivalents, we thus identified a matched subset of cognates and non-cognates that would be used in a second set of analyses.
 
-[^3]: Among these 131 cognates on the complete list, we could identify 11 cognates that were potentially form-identical: choo choo, grr, meow, vroom, woof, Cheerios, Coke, pizza, muffin, toast, and jeans (only the last three were on the matched list). Note that each of these words was either a sound effect, a brand name, or a conventionalized borrowing. Even for these words, adult speakers often pronounce them slightly differently in French and and English such that words align with each language’s phonology, for example differences in the exact realization of particular phonemes, and stress pattern differences in bisyllabic words muffin and pizza.
+[^3]: Among these 131 cognates on the complete list, we could identify 11 cognates that were potentially form-identical: "choo choo", "grr", "meow", "vroom", "woof", "Cheerios", "Coke", "pizza", "muffin", "toast", and "jeans" (only the last three were on the matched list). Note that each of these words was either a sound effect, a brand name, or a conventionalized borrowing. Even for these words, adult speakers often pronounce them slightly differently in French and and English such that words align with each language’s phonology, for example differences in the exact realization of particular phonemes, and stress pattern differences in bisyllabic words "muffin" and "pizza".
 
 ```{r include=FALSE, cache=TRUE}
 CognateList_nouns <- read.csv(here::here("01_cognate_lists/CognateList_nouns.csv"))
@@ -657,26 +658,25 @@ Analysis1_full_logistic_model <- keepers_cognate_full_notPair %>%
 
 Analysis1_full_logistic_model_coefs <- summary(Analysis1_full_logistic_model)$coef %>%
   as.data.frame %>%
-  mutate_at(c("Estimate","Std. Error", "z value", "Pr(>|z|)"), 
-            function (x) signif(x, digits = 3)) %>% 
+  #mutate_at(c("Estimate","Std. Error", "z value", "Pr(>|z|)"), 
+  #          function (x) signif(x, digits = 3)) %>% 
   rename(SE = `Std. Error`, 
          z = `z value`,
          p = `Pr(>|z|)`) %>%
-  mutate_if(is.numeric, round, digits = 3) %>%
+  mutate_at(vars(-p), round, digits = 2) %>%
   mutate(p = case_when(
     p < .001 ~ "<.001",
     p < .01 ~ "<.01",
     p < .05 ~ "<.05",
-    TRUE ~ as.character(p)))
+    TRUE ~ as.character(round(p,3))))
 
 rownames(Analysis1_full_logistic_model_coefs) <- c("Intercept", "cognate_status", "age_days", 
                      "cognate_status * age_days") 
 
-# goodness of fit
-library(DHARMa)
-testUniformity(Analysis1_full_logistic_model)
-testDispersion(Analysis1_full_logistic_model) 
-plotQQunif(Analysis1_full_logistic_model)
+## goodness of fit
+#testUniformity(Analysis1_full_logistic_model)
+#testDispersion(Analysis1_full_logistic_model) 
+#plotQQunif(Analysis1_full_logistic_model)
 
 
 # logistic mixed-effects model 2 (counts as DV instead of prop) returns the same result
@@ -746,27 +746,27 @@ Analysis1_matched_logistic_model <- keepers_cognate_matched_notPair %>%
 
 Analysis1_matched_logistic_model_coefs <- summary(Analysis1_matched_logistic_model)$coef %>%
   as.data.frame %>%
-  mutate_at(c("Estimate","Std. Error", "z value", "Pr(>|z|)"), 
-            function (x) signif(x, digits = 3)) %>% 
+  #mutate_at(c("Estimate","Std. Error", "z value", "Pr(>|z|)"), 
+  #          function (x) signif(x, digits = 3)) %>% 
   rename(SE = `Std. Error`, 
          z = `z value`,
          p = `Pr(>|z|)`) %>%
-  mutate_if(is.numeric, round, digits = 3) %>%
+  mutate_at(vars(-p), round, digits = 2) %>%
   mutate(p = case_when(
     p < .001 ~ "<.001",
     p < .01 ~ "<.01",
     p < .05 ~ "<.05",
-    TRUE ~ as.character(p)))
+    TRUE ~ as.character(round(p,3))))
 
 rownames(Analysis1_matched_logistic_model_coefs) <- c("Intercept", "cognate_status", "age_days", 
                      "cognate_status * age_days") 
 
 
-# goodness of fit
-library(DHARMa)
-testUniformity(Analysis1_matched_logistic_model)
-testDispersion(Analysis1_matched_logistic_model) 
-plotQQunif(Analysis1_matched_logistic_model)
+## goodness of fit
+#library(DHARMa)
+#testUniformity(Analysis1_matched_logistic_model)
+#testDispersion(Analysis1_matched_logistic_model) 
+#plotQQunif(Analysis1_matched_logistic_model)
 
 ```
 
@@ -775,7 +775,7 @@ Out of the 162 cognate (i.e., adding the 81 English cognate words and 81 French 
 ```{r Table 1, results = "asis", cache = TRUE}
 Table1 <- cbind(Analysis1_full_logistic_model_coefs, Analysis1_matched_logistic_model_coefs)
 
-papaja::apa_table(Table1, format.args = list(digits = 3),
+papaja::apa_table(Table1, format.args = list(digits = 2),
                   col.names =c("","Estimate", "$SE$","$z$","$p$","Estimate", "$SE$","$z$","$p$"),
                   align=c("l","c","c","c","c","c","c","c", "c"),
                   col_spanners = list("Complete list" = c(2,5), "Matched list" = c(6,9)),
@@ -821,8 +821,8 @@ Figure1 <- right_join(prop_word_full, prop_word_matched) %>%
 
 Figure1
 
-ggsave("Figure1.png", Figure1,
-       width = 9, height = 6)
+#ggsave("Figure1.png", Figure1,
+#       width = 9, height = 6)
 ```
 
 ## Dependent Variable 2: Cognate Pairs Versus Non-Cognate Pairs
@@ -871,27 +871,27 @@ Analysis2_full_logistic_model <- keepers_cognate_full_wide %>%
 
 Analysis2_full_logistic_model_coefs <- summary(Analysis2_full_logistic_model)$coef %>%
   as.data.frame %>%
-  mutate_at(c("Estimate","Std. Error", "z value", "Pr(>|z|)"), 
-            function (x) signif(x, digits = 3)) %>% 
+  #mutate_at(c("Estimate","Std. Error", "z value", "Pr(>|z|)"), 
+  #          function (x) signif(x, digits = 3)) %>% 
   rename(SE = `Std. Error`, 
          z = `z value`,
          p = `Pr(>|z|)`) %>%
-  mutate_if(is.numeric, round, digits = 3) %>%
+  mutate_at(vars(-p), round, digits = 2) %>%
   mutate(p = case_when(
     p < .001 ~ "<.001",
     p < .01 ~ "<.01",
     p < .05 ~ "<.05",
-    TRUE ~ as.character(p)))
+    TRUE ~ as.character(round(p,3))))
 
 rownames(Analysis2_full_logistic_model_coefs) <- c("Intercept", "cognate_status", "age_days", 
                      "cognate_status * age_days") 
 
 
-# goodness of fit
-library(DHARMa)
-testUniformity(Analysis2_full_logistic_model)
-testDispersion(Analysis2_full_logistic_model) 
-plotQQunif(Analysis2_full_logistic_model)
+## goodness of fit
+#library(DHARMa)
+#testUniformity(Analysis2_full_logistic_model)
+#testDispersion(Analysis2_full_logistic_model) 
+#plotQQunif(Analysis2_full_logistic_model)
 
 ```
 
@@ -937,27 +937,27 @@ Analysis2_matched_logistic_model <- keepers_cognate_matched_wide %>%
 
 Analysis2_matched_logistic_model_coefs <- summary(Analysis2_matched_logistic_model)$coef %>%
   as.data.frame %>%
-  mutate_at(c("Estimate","Std. Error", "z value", "Pr(>|z|)"), 
-            function (x) signif(x, digits = 3)) %>% 
+  #mutate_at(c("Estimate","Std. Error", "z value", "Pr(>|z|)"), 
+  #          function (x) signif(x, digits = 3)) %>% 
   rename(SE = `Std. Error`, 
          z = `z value`,
          p = `Pr(>|z|)`) %>%
-  mutate_if(is.numeric, round, digits = 3) %>%
+  mutate_at(vars(-p), round, digits = 2) %>%
   mutate(p = case_when(
     p < .001 ~ "<.001",
     p < .01 ~ "<.01",
     p < .05 ~ "<.05",
-    TRUE ~ as.character(p)))
+    TRUE ~ as.character(round(p,3))))
 
 rownames(Analysis2_matched_logistic_model_coefs) <- c("Intercept", "cognate_status", "age_days", 
                      "cognate_status * age_days") 
 
 
-# goodness of fit
-library(DHARMa)
-testUniformity(Analysis2_matched_logistic_model)
-testDispersion(Analysis2_matched_logistic_model) 
-plotQQunif(Analysis2_matched_logistic_model)
+## goodness of fit
+#library(DHARMa)
+#testUniformity(Analysis2_matched_logistic_model)
+#testDispersion(Analysis2_matched_logistic_model) 
+#plotQQunif(Analysis2_matched_logistic_model)
 
 ```
 
@@ -966,7 +966,7 @@ Out of the `r nrow(CognateList_matching)` translation equivalent pairs, bilingua
 ```{r Table 2, results = "asis", cache = TRUE}
 Table2 <- cbind(Analysis2_full_logistic_model_coefs, Analysis2_matched_logistic_model_coefs)
 
-papaja::apa_table(Table2, format.args = list(digits = 3),
+papaja::apa_table(Table2, format.args = list(digits = 2),
                   col.names =c("","Estimate", "$SE$","$z$","$p$","Estimate", "$SE$","$z$","$p$"),
                   align=c("l","c","c","c","c","c","c","c", "c"),
                   col_spanners = list("Complete list" = c(2,5), "Matched list" = c(6,9)),
@@ -1014,8 +1014,8 @@ Figure2 <- right_join(prop_TE_full, prop_TE_matched) %>%
 
 Figure2
 
-ggsave("Figure2.png", Figure2,
-       width = 9, height = 6)
+#ggsave("Figure2.png", Figure2,
+#       width = 9, height = 6)
 ```
 
 ## Summary of Analyses
