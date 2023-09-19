@@ -25,7 +25,7 @@ author:
     affiliation   : "1" 
     email         : "rachelkytsui@gmail.com"
     corresponding : yes
-    address       : "Department of Psychology, 7141 Sherbrooke St. West, Montreal, QC, Canada, H2T1V2. Rachel Ka-Ying Tsui is now at Laboratory for Language Development, RIKEN Center for Brain Science, 2-1 Hirosawa, Wako-shi, Saitama, Japan, 351-0198"
+    address       : "Department of Psychology, 7141 Sherbrooke St. West, Montreal, QC, Canada, H2T1V2. Rachel Ka-Ying Tsui is now at Language Development Subgroup of Laboratory for Molecular Mechanism of Brain Development, RIKEN Center for Brain Science, 2-1 Hirosawa, Wako-shi, Saitama, Japan, 351-0198"
   - name          : "Krista Byers-Heinlein"
     affiliation   : "1" 
     email         : "k.byers@concordia.ca"
@@ -83,6 +83,19 @@ library(broom)
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, cache = TRUE)
 
 ```
+
+## Deviations from the Pre-registration
+
+The current study was conducted as a component study under a larger project which aimed to collect longitudinal monthly data from 100 French–English bilingual infants during 16 to 30 months (https://osf.io/a9f4d/). The larger project was initiated with the intention of being able to investigate a variety of research questions that would only be possible from a dense, longitudinal dataset of vocabulary measured in both languages. Conceptualization and data analysis plan of the current study was pre-registered and conducted after the data collection for the larger project had already begun but before data collection was completed, as it was the basis of an undergraduate honours thesis, thus the current sample represents a subset of the larger project’s target sample. In this document, we detailed deviations from the pre-registration for the current study (https://osf.io/6fk8r/).
+
+First of all, while the pre-registered data collection plan followed the larger study and stated that a final language exposure questionnaire would be collected at 30 months, none of the participating infants in the current study reached 30 months of age when this study concluded, thus our analyses used the last available language exposure questionnaire for each infant.
+
+Next, we also slightly modified the cognate list as mentioned in the section “Identification of Translation Equivalents and Cognates”. The pre-registration stated that there were 132 cognates in the cognate list; but it was in fact missing a few onomatopoeias and nouns. Those were then added back to the cognate list, leading to a total of 138 cognates and 473 non-cognates in the current study. Therefore, the number of items subsequently described in the section “Identification of Translation Equivalents and Cognates” also slightly deviated from the pre-registration accordingly.
+
+Finally, with regards to the data analysis strategy, we deviated from the pre-registered plan by using proportion of words as the dependent variable instead of the raw number of words. Proportion was used as opposed to raw number of words to provide a more comparable description of production of cognates versus non-cognates, since the number of cognate words and non-cognate words differed especially in the complete list. We note that the use of proportions should not change the pattern of statistical significance. Since the dependent variables were now proportion data, logistic regression models were used rather than linear regression models as pre-registered. Moreover, in addition to analyzing the number of translation equivalent pairs as pre-registered, the main paper included an additional exploratory analysis that looked at the interval between infants producing a word and producing its translation equivalent, as a function of whether the pairs were cognates or non-cognates. 
+
+
+## Analyses Using the More Stringent 25%-75% Language Exposure Criterion
 
 ```{r load_data, cache = TRUE}
 # read in the final cleaned keepers_data
@@ -208,7 +221,7 @@ n_avg_entries_stringent <- clean_demog_stringent  %>%
             max_entry = max(n, na.rm=T))
 ```
 
-Using the more stringent  25%-75% language exposure criterion, we further eliminated a total of `r paste(exceed_25_75_langexp %>% nrow())` bilingual infants who had a wider language exposure range. This left us with data from `r paste(total_n_stringent)` participants (`r paste(n_female_stringent)` girls; mean starting age = `r round(mean_age_1st_entry_stringent$mean_age, 2)` months, $SD$ = `r round(mean_age_1st_entry_stringent$sd_age, 2)`, range = `r round(mean_age_1st_entry_stringent$min_age, 2)` – `r round(mean_age_1st_entry_stringent$max_age, 2)`; mean ending age = `r round(mean_age_final_entry_stringent$mean_age, 2)` months, $SD$ = `r round(mean_age_final_entry_stringent$sd_age, 2)`, range = `r round(mean_age_final_entry_stringent$min_age, 2)` – `r round(mean_age_final_entry_stringent$max_age, 2)`), with `r paste(n_eng_administration_stringent)` English CDI administrations and `r paste(n_fr_administration_stringent)` French CDI administration. As in the main analysis, we retained only those administrations where both the English and French were completed at the same time point; this gave us `r paste(n_both_administration_stringent)` completed administrations from `r paste(n_subject_both_administration_stringent)` infants. Among the `r paste(n_subject_both_administration_stringent)` infants, `r paste(n_subject_both_administration_stringent - n_multiple_entry_stringent)` infants contributed data at only one time point, and `r paste(n_multiple_entry_stringent)` infants contributed data at more than one time point, with participants contributing an average of `r round(n_avg_entries_stringent$mean_entry, 2)` measurements for each language ($SD$ = `r round(n_avg_entries_stringent$sd_entry, 2)`, range = `r round(n_avg_entries_stringent$min_entry)` – `r round(n_avg_entries_stringent$max_entry)`).
+Using the more stringent 25%-75% language exposure criterion, we further eliminated a total of `r paste(exceed_25_75_langexp %>% nrow())` bilingual infants who had a wider language exposure range. This left us with data from `r paste(total_n_stringent)` participants (`r paste(n_female_stringent)` girls; mean starting age = `r round(mean_age_1st_entry_stringent$mean_age, 2)` months, $SD$ = `r round(mean_age_1st_entry_stringent$sd_age, 2)`, range = `r round(mean_age_1st_entry_stringent$min_age, 2)` – `r round(mean_age_1st_entry_stringent$max_age, 2)`; mean ending age = `r round(mean_age_final_entry_stringent$mean_age, 2)` months, $SD$ = `r round(mean_age_final_entry_stringent$sd_age, 2)`, range = `r round(mean_age_final_entry_stringent$min_age, 2)` – `r round(mean_age_final_entry_stringent$max_age, 2)`), with `r paste(n_eng_administration_stringent)` English CDI administrations and `r paste(n_fr_administration_stringent)` French CDI administration. As in the main pre-registered analysis, we retained only those administrations where both the English and French were completed at the same time point; this gave us `r paste(n_both_administration_stringent)` completed administrations from `r paste(n_subject_both_administration_stringent)` infants. Among the `r paste(n_subject_both_administration_stringent)` infants, `r paste(n_subject_both_administration_stringent - n_multiple_entry_stringent)` infants contributed data at only one time point, and `r paste(n_multiple_entry_stringent)` infants contributed data at more than one time point, with participants contributing an average of `r round(n_avg_entries_stringent$mean_entry, 2)` measurements for each language ($SD$ = `r round(n_avg_entries_stringent$sd_entry, 2)`, range = `r round(n_avg_entries_stringent$min_entry)` – `r round(n_avg_entries_stringent$max_entry)`).
 
 ```{r include=FALSE, cache=TRUE}
 # Average language exposure (weighted mean is calculated as participants contributed different number of LEQ update data)
@@ -370,7 +383,7 @@ n_maternal_uni_stringent <- clean_demog_stringent %>%
 
 On average, this group of `r  paste(n_subject_both_administration_stringent)` infants were exposed to English `r round(mean_langexp_stringent$mean_exposure[mean_langexp_stringent$language=="exposure_eng"],1)`% of the time ($SD$ = `r round(mean_langexp_stringent$sd_exposure[mean_langexp_stringent$language=="exposure_eng"],1)`, range = `r range_langexp_stringent$min_exposure[range_langexp_stringent$language=="mean_exposure_eng"]` – `r range_langexp_stringent$max_exposure[range_langexp_stringent$language=="mean_exposure_eng"]`), to French `r round(mean_langexp_stringent$mean_exposure[mean_langexp_stringent$language=="exposure_fr"],1)`% of the time ($SD$ = `r round(mean_langexp_stringent$sd_exposure[mean_langexp_stringent$language=="exposure_fr"],1)`, range = `r range_langexp_stringent$min_exposure[range_langexp_stringent$language=="mean_exposure_fr"]` – `r range_langexp_stringent$max_exposure[range_langexp_stringent$language=="mean_exposure_fr"]`), and to a third language `r round(mean_langexp_stringent$mean_exposure[mean_langexp_stringent$language=="exposure_other"],1)`% of the time ($SD$ = `r round(mean_langexp_stringent$sd_exposure[mean_langexp_stringent$language=="exposure_other"],1)`, range = `r range_langexp_stringent$min_exposure[range_langexp_stringent$language=="mean_exposure_other"]` – `r range_langexp_stringent$max_exposure[range_langexp_stringent$language=="mean_exposure_other"]`). `r paste(mean_engdom_stringent$number[1])` of the bilingual infants were English-dominant ($M$ = `r round(mean_engdom_stringent$mean_exposure[mean_engdom_stringent$language=="exposure_eng"],1)`% English exposure, $SD$ = `r round(mean_engdom_stringent$sd_exposure[mean_engdom_stringent$language=="exposure_eng"],1)`, range = `r range_engdom_stringent$min_exposure[range_engdom_stringent$language=="mean_exposure_eng"]` – `r range_engdom_stringent$max_exposure[range_engdom_stringent$language=="mean_exposure_eng"]`), `r paste(mean_frdom_stringent$number[1])` were French-dominant  ($M$ = `r round(mean_frdom_stringent$mean_exposure[mean_frdom_stringent$language=="exposure_fr"],1)`% French exposure, $SD$ = `r round(mean_frdom_stringent$sd_exposure[mean_frdom_stringent$language=="exposure_fr"],1)`, range = `r range_frdom_stringent$min_exposure[range_frdom_stringent$language=="mean_exposure_fr"]` – `r range_frdom_stringent$max_exposure[range_frdom_stringent$language=="mean_exposure_fr"]`), and `r paste(n_equalexp_stringent)` reported equal exposure to both English and French. The average maternal education level was `r round(mean_maternaledu_stringent$mean_edu_level,2)` years ($SD$ = `r round(mean_maternaledu_stringent$sd_edu_level,2)`, range = `r round(mean_maternaledu_stringent$min_edu_level)` – `r round(mean_maternaledu_stringent$max_edu_level)`), and `r round(n_maternal_uni_stringent$percentage[n_maternal_uni_stringent$university_degree=="1"],2)`% of the mothers had completed a university degree or higher. 
 
-## Descriptive Measures of Number of Words Produced
+### Descriptive Measures of Number of Words Produced
 ```{r include=FALSE, cache=TRUE}
 # complete list
 keepers_cognate_full <- read.csv(here::here("data_keepers/public_keepers_cognate_full.csv"))
@@ -487,7 +500,7 @@ matched_mean_total_stringent <- keepers_cognate_matched_wide_stringent %>%
 
 As for the matched list, bilingual infants produced an average of `r round(matched_mean_total_stringent$mean_number[full_mean_total_stringent$type=="total_acquired"])` words ($SD$ = `r round(matched_mean_total_stringent$sd_number[full_mean_total_stringent$type=="total_acquired"],2)`, range = `r round(matched_mean_total_stringent$min_number[full_mean_total_stringent$type=="total_acquired"])` – `r round(matched_mean_total_stringent$max_number[full_mean_total_stringent$type=="total_acquired"])`), which constituted `r round(matched_mean_total_stringent$mean_number[full_mean_total_stringent$type=="percent_word_acquired"],2)`% of the words on the matched list. On average, bilingual infants produced a total of `r round(matched_mean_total_stringent$mean_number[full_mean_total_stringent$type=="total_all_TE_acquired"])` complete translation equivalent pairs ($SD$ = `r round(matched_mean_total_stringent$sd_number[full_mean_total_stringent$type=="total_all_TE_acquired"],2)`, range = `r round(matched_mean_total_stringent$min_number[full_mean_total_stringent$type=="total_all_TE_acquired"])` – `r round(matched_mean_total_stringent$max_number[full_mean_total_stringent$type=="total_all_TE_acquired"])`), which constituted `r round(matched_mean_total_stringent$mean_number[full_mean_total_stringent$type=="percent_all_TE_acquired"],2)`% of translation equivalent pairs on the matched list. 
 
-## Dependent Variable 1: Cognate Words Versus Non-Cognate Words
+### Dependent Variable 1: Cognate Words Versus Non-Cognate Words
 ```{r include=FALSE, cache=TRUE}
 # Dependent Variable 1: Cognate Words Versus Non-Cognate Words
 ## average age in the sample
@@ -500,7 +513,7 @@ Following the procedure in the main analysis, we first looked at the total propo
 
 proportion_word ~ age * cognate_status + (1|participant)
 
-### Complete List
+#### Complete List
 ```{r include=FALSE, cache=TRUE}
 ## Complete List
 ### calculate to see how many cognate or non-cognate words have been produced (i.e., either word acquired only in one language or words acquired in both language)
@@ -571,7 +584,7 @@ rownames(stringent_Analysis1_full_logistic_model_coefs) <- c("Intercept", "cogna
 
 Out of the complete list which contained 262 cognate words (i.e., adding the 131 English cognate words and 131 French cognate words) and 812 non-cognate words (i.e., adding the 406 English non-cognate words and 406 French non-cognate words), bilingual infants produced an average of `r round(full_mean_cognates_stringent$mean_n_word[full_mean_cognates_stringent$cognate_status=="cognate"])` cognate words ($SD$ = `r round(full_mean_cognates_stringent$sd_n_word[full_mean_cognates_stringent$cognate_status=="cognate"],2)`, range = `r round(full_mean_cognates_stringent$min_n_word[full_mean_cognates_stringent$cognate_status=="cognate"])` – `r round(full_mean_cognates_stringent$max_n_word[full_mean_cognates_stringent$cognate_status=="cognate"])`) and `r round(full_mean_cognates_stringent$mean_n_word[full_mean_cognates_stringent$cognate_status=="non-cognate"])` non-cognate words ($SD$ = `r round(full_mean_cognates_stringent$sd_n_word[full_mean_cognates_stringent$cognate_status=="non-cognate"],2)`, range = `r round(full_mean_cognates_stringent$min_n_word[full_mean_cognates_stringent$cognate_status=="non-cognate"])` – `r round(full_mean_cognates_stringent$max_n_word[full_mean_cognates_stringent$cognate_status=="non-cognate"])`). The proportion of cognate words produced was `r round(full_mean_cognates_prop_stringent$mean_prop_word[full_mean_cognates_prop_stringent$cognate_status=="cognate"],2)` ($SD$ = `r round(full_mean_cognates_prop_stringent$sd_prop_word[full_mean_cognates_prop_stringent$cognate_status=="cognate"],2)`, range = `r round(full_mean_cognates_prop_stringent$min_prop_word[full_mean_cognates_prop_stringent$cognate_status=="cognate"],2)` – `r round(full_mean_cognates_prop_stringent$max_prop_word[full_mean_cognates_prop_stringent$cognate_status=="cognate"],2)`), whereas the proportion of non-cognate words produced was `r round(full_mean_cognates_prop_stringent$mean_prop_word[full_mean_cognates_prop_stringent$cognate_status=="non-cognate"],2)` ($SD$ = `r round(full_mean_cognates_prop_stringent$sd_prop_word[full_mean_cognates_prop_stringent$cognate_status=="non-cognate"],2)`, range = `r round(full_mean_cognates_prop_stringent$min_prop_word[full_mean_cognates_prop_stringent$cognate_status=="non-cognate"],2)` – `r round(full_mean_cognates_prop_stringent$max_prop_word[full_mean_cognates_prop_stringent$cognate_status=="non-cognate"],2)`). Table S1 shows the coefficient estimates for the model and Figure S1 Panel A visualizes the model. Similar to the results reported in the main analysis, we observed significant main effects of age and cognate status, as well as a significant interaction. Overall, the pattern of results was the same as that of the main analysis.
 
-### Matched List
+#### Matched List
 ```{r include=FALSE, cache=TRUE}
 ## Matched List
 ### calculate to see how many cognate or non-cognate words have been produced (i.e., either word acquired only in one language or words acquired in both language)
@@ -645,7 +658,7 @@ papaja::apa_table(TableS1, format.args = list(digits = 2),
                   col.names =c("","Estimate", "$SE$","$z$","$p$","Estimate", "$SE$","$z$","$p$"),
                   align=c("l","c","c","c","c","c","c","c", "c"),
                   col_spanners = list("Complete list" = c(2,5), "Matched list" = c(6,9)),
-                  caption="Table S1. Coefficient estimates from the mixed-effects logistic models predicting proportion of words produced.",
+                  caption="Table S1. Coefficient estimates from the logistic mixed-effects models predicting proportion of words produced.",
                   landscape = FALSE, 
                   placement = "H")
 ```
@@ -692,12 +705,12 @@ stringent_Figure1
 ```
 
 
-## Dependent Variable 2: Cognate Pairs Versus Non-Cognate Pairs
+### Dependent Variable 2: Cognate Pairs Versus Non-Cognate Pairs
 Again, following the procedure reported in the main analysis, the proportion of translation equivalent pairs produced was entered as the dependent variable in the following analysis. Age and cognate status were entered as our predictor variables, with non-cognates set as the reference level, and we ran separate logistic models for the complete and matched lists. The initial model specification, which included a random effect of age and cognate status by participants, had to be reduced for model convergence; therefore, the final model was:
 
 proportion_pair ~ age * cognate_status + (1|participant)
 
-### Complete List
+#### Complete List
 ```{r include=FALSE, cache=TRUE}
 # Dependent Variable 2: Cognate Pairs Versus Non-Cognate Pairs
 
@@ -757,7 +770,7 @@ rownames(stringent_Analysis2_full_logistic_model_coefs) <- c("Intercept", "cogna
 
 Out of the complete list which contained 537 translation equivalent pairs (131 cognates and 406 non-cognates), bilingual infants produced an average of `r round(full_mean_total_TE_stringent$mean_TE[full_mean_total_TE_stringent$cognate_status=="cognate"])` cognate pairs ($SD$ = `r round(full_mean_total_TE_stringent$sd_TE[full_mean_total_TE_stringent$cognate_status=="cognate"],2)`, range = `r round(full_mean_total_TE_stringent$min_TE[full_mean_total_TE_stringent$cognate_status=="cognate"])` – `r round(full_mean_total_TE_stringent$max_TE[full_mean_total_TE_stringent$cognate_status=="cognate"])`) and `r round(full_mean_total_TE_stringent$mean_TE[full_mean_total_TE_stringent$cognate_status=="non-cognate"])` non-cognate pairs ($SD$ = `r round(full_mean_total_TE_stringent$sd_TE[full_mean_total_TE_stringent$cognate_status=="non-cognate"],2)`, range = `r round(full_mean_total_TE_stringent$min_TE[full_mean_total_TE_stringent$cognate_status=="non-cognate"])` – `r round(full_mean_total_TE_stringent$max_TE[full_mean_total_TE_stringent$cognate_status=="non-cognate"])`). The proportion of cognate pairs produced was `r round(full_mean_prop_TE_stringent$mean_TE[full_mean_prop_TE_stringent$cognate_status=="cognate"],2)` ($SD$ = `r round(full_mean_prop_TE_stringent$sd_TE[full_mean_prop_TE_stringent$cognate_status=="cognate"],2)`, range = `r round(full_mean_prop_TE_stringent$min_TE[full_mean_prop_TE_stringent$cognate_status=="cognate"],2)` – `r round(full_mean_prop_TE_stringent$max_TE[full_mean_prop_TE_stringent$cognate_status=="cognate"],2)`) whereas the proportion of non-cognate pairs produced was `r round(full_mean_prop_TE_stringent$mean_TE[full_mean_prop_TE_stringent$cognate_status=="non-cognate"],2)` ($SD$ = `r round(full_mean_prop_TE_stringent$sd_TE[full_mean_prop_TE_stringent$cognate_status=="non-cognate"],2)`, range = `r round(full_mean_prop_TE_stringent$min_TE[full_mean_prop_TE_stringent$cognate_status=="non-cognate"],2)` – `r round(full_mean_prop_TE_stringent$max_TE[full_mean_prop_TE_stringent$cognate_status=="non-cognate"],2)`). Table S2 shows the coefficient estimates for the model and Figure S2 Panel A visualizes the model. Again, similar to the pattern reported in the main analysis, there were significant effects of age and cognate status and a significant interaction between age and cognate status. Therefore, we observed the same findings as in the main analysis, where overall infants produced a greater proportion of cognates than non-cognates and there is a slightly steeper learning curve for non-cognates than cognates. 
 
-### Matched List
+#### Matched List
 ```{r include=FALSE, cache=TRUE}
 ## Matched List
 ### mean number of cognates/non-cognates acquired
@@ -822,7 +835,7 @@ papaja::apa_table(TableS2, format.args = list(digits = 2),
                   col.names =c("","Estimate", "$SE$","$z$","$p$","Estimate", "$SE$","$z$","$p$"),
                   align=c("l","c","c","c","c","c","c","c", "c"),
                   col_spanners = list("Complete list" = c(2,5), "Matched list" = c(6,9)),
-                  caption="Table S2. Coefficient estimates from the mixed-effects logistic models predicting proportion of translation equivalent pairs produced.",
+                  caption="Table S2. Coefficient estimates from the logistic mixed-effects models predicting proportion of translation equivalent pairs produced.",
                   landscape = FALSE)
 ```
 
@@ -868,5 +881,408 @@ stringent_Figure2
 #       width = 9, height = 6)
 ```
 
-## Summary of Analyses
-Overall, the result patterns observed here with the more stringent language exposure criterion were consistent with those reported in the main analysis. This suggests that the cognate effect we observed was robust across different language exposure inclusion criteria.
+
+### Exploratory Analysis: Interval between Producing Translation Equivalents
+```{r include=FALSE, cache=TRUE}
+# first, create data frame for interval analysis
+
+## Complete list
+interval_analysis_full <- keepers_cognate_full_stringent %>%
+  group_by(subject_id) %>%
+  # calculate no. of months each infant contributes
+  mutate(total_n_months = n_distinct(n_months)) %>%
+  filter(total_n_months != 1) %>%
+  group_by(subject_id, total_n_months, cognate_status, word_pairs) %>%
+  #filter(subject_id == "55087" #"55087" #"56352"  #"53279" 
+  #       #  & word_pairs == "dog - chien"
+  #       ) %>%
+  # first, detect the month in which they first learn the words in a pair
+  mutate(first_n_month_acquired_eng = n_months[ifelse(eng_acquired == 0, NA_real_, ### if there is 0 (i.e., not acquired in that month), then return NA;
+                                                    min(which(eng_acquired == 1), na.rm = T))],
+         first_n_month_acquired_fr = n_months[ifelse(fr_acquired == 0, NA_real_, ### if there is 0 (i.e., not acquired in that month), then return NA;
+                                                   min(which(fr_acquired == 1), na.rm = T))],
+         first_month_acquired_eng = age_months[ifelse(eng_acquired == 0, NA_real_, ### if there is 0 (i.e., not acquired in that month), then return NA;
+                                                    min(which(eng_acquired == 1), na.rm = T))], ### otherwise, detect the n_months in which that word was first learned
+         first_month_acquired_fr = age_months[ifelse(fr_acquired == 0, NA_real_, ### if there is 0 (i.e., not acquired in that month), then return NA;
+                                                   min(which(fr_acquired == 1), na.rm = T))], ### otherwise, detect the n_months in which that word was first learned
+         first_day_acquired_eng = age_days[ifelse(eng_acquired == 0, NA_real_,
+                                                  min(which(eng_acquired == 1), na.rm = T))],
+         first_day_acquired_fr = age_days[ifelse(fr_acquired == 0, NA_real_,
+                                                  min(which(fr_acquired == 1), na.rm = T))]
+         ) %>% 
+  fill(c(first_n_month_acquired_eng, first_n_month_acquired_fr), .direction = "downup") %>%
+  fill(c(first_month_acquired_eng, first_month_acquired_fr), .direction = "downup") %>%
+  fill(c(first_day_acquired_eng, first_day_acquired_fr), .direction = "downup") %>%
+  # next, find out in which language did they first learn a word in a pair
+  mutate(first_acquired_lang = case_when(first_month_acquired_eng == first_month_acquired_fr & !is.na(first_month_acquired_eng) & !is.na(first_month_acquired_fr) ~ "both",
+                                         first_month_acquired_eng > first_month_acquired_fr ~ "fr", 
+                                         first_month_acquired_eng < first_month_acquired_fr ~"eng",
+                                         !is.na(first_month_acquired_fr) & is.na(first_month_acquired_eng) ~ "fr",
+                                         is.na(first_month_acquired_fr) & !is.na(first_month_acquired_eng) ~ "eng",
+                                         TRUE ~ NA_character_),
+         first_acquired_n_month = case_when(first_acquired_lang == "both" ~ first_n_month_acquired_eng,
+                                            first_acquired_lang == "fr" ~ first_n_month_acquired_fr,
+                                            first_acquired_lang == "eng" ~ first_n_month_acquired_eng,
+                                            TRUE ~ NA_real_), 
+         first_acquired_month = case_when(first_acquired_lang == "both" ~ first_month_acquired_eng,
+                                          first_acquired_lang == "fr" ~ first_month_acquired_fr,
+                                          first_acquired_lang == "eng" ~ first_month_acquired_eng,
+                                          TRUE ~ NA_real_),
+         first_acquired_day = case_when(first_acquired_lang == "both" ~ first_day_acquired_eng,
+                                        first_acquired_lang == "fr" ~ first_day_acquired_fr,
+                                        first_acquired_lang == "eng" ~ first_day_acquired_eng,
+                                        TRUE ~ NA_real_)
+         ) %>%
+  # then, define the cognate language and month in which the cognate was learned
+  mutate(cognate_acquired_lang = case_when(first_month_acquired_eng == first_month_acquired_fr & !is.na(first_month_acquired_eng) & !is.na(first_month_acquired_fr) ~ "both",
+                                           first_month_acquired_eng > first_month_acquired_fr ~ "eng", 
+                                           first_month_acquired_eng < first_month_acquired_fr ~"fr",
+                                           !is.na(first_month_acquired_fr) & is.na(first_month_acquired_eng) ~ NA_character_,
+                                           is.na(first_month_acquired_fr) & !is.na(first_month_acquired_eng) ~ NA_character_,
+                                           TRUE ~ NA_character_),
+         cognate_acquired_n_month = case_when(first_acquired_lang == "both" ~ first_n_month_acquired_eng,
+                                              first_acquired_lang == "fr" ~ first_n_month_acquired_eng,
+                                              first_acquired_lang == "eng" ~ first_n_month_acquired_fr,
+                                              TRUE ~ NA_real_),
+         cognate_acquired_month = case_when(first_acquired_lang == "both" ~ first_month_acquired_eng,
+                                            first_acquired_lang == "fr" ~ first_month_acquired_eng,
+                                            first_acquired_lang == "eng" ~ first_month_acquired_fr,
+                                            TRUE ~ NA_real_),
+         cognate_acquired_day = case_when(first_acquired_lang == "both" ~ first_day_acquired_eng,
+                                          first_acquired_lang == "fr" ~ first_day_acquired_eng,
+                                          first_acquired_lang == "eng" ~ first_day_acquired_fr,
+                                          TRUE ~ NA_real_),
+         acquired_or_not = case_when(is.na(first_acquired_lang) & is.na(cognate_acquired_lang) ~ NA_character_,
+                                     !is.na(first_acquired_lang) & !is.na(cognate_acquired_lang) ~ "both",
+                                     is.na(first_acquired_lang) & !is.na(cognate_acquired_lang) | !is.na(first_acquired_lang) & is.na(cognate_acquired_lang) ~ "one")) %>%
+  # finally, calculate the interval in between when the first word and the cognate word were learned
+  mutate(interval_month = cognate_acquired_month - first_acquired_month,
+         interval_day = cognate_acquired_day - first_acquired_day,
+         rate_of_change = (cognate_acquired_month - first_acquired_month) / first_acquired_month * 100)
+
+
+## Matched list
+interval_analysis_matched <- keepers_cognate_matched_stringent %>%
+  group_by(subject_id) %>%
+  # calculate no. of months each infant contributes
+  mutate(total_n_months = n_distinct(n_months)) %>%
+  filter(total_n_months != 1) %>%
+  group_by(subject_id, total_n_months, cognate_status, word_pairs) %>%
+  #filter(subject_id == "55087" #"55087" #"56352"  #"53279" 
+  #       #  & word_pairs == "dog - chien"
+  #       ) %>%
+  # first, detect the month in which they first learn the words in a pair
+  mutate(first_n_month_acquired_eng = n_months[ifelse(eng_acquired == 0, NA_real_, ### if there is 0 (i.e., not acquired in that month), then return NA;
+                                                    min(which(eng_acquired == 1), na.rm = T))],
+         first_n_month_acquired_fr = n_months[ifelse(fr_acquired == 0, NA_real_, ### if there is 0 (i.e., not acquired in that month), then return NA;
+                                                   min(which(fr_acquired == 1), na.rm = T))],
+         first_month_acquired_eng = age_months[ifelse(eng_acquired == 0, NA_real_, ### if there is 0 (i.e., not acquired in that month), then return NA;
+                                                    min(which(eng_acquired == 1), na.rm = T))], ### otherwise, detect the n_months in which that word was first learned
+         first_month_acquired_fr = age_months[ifelse(fr_acquired == 0, NA_real_, ### if there is 0 (i.e., not acquired in that month), then return NA;
+                                                   min(which(fr_acquired == 1), na.rm = T))], ### otherwise, detect the n_months in which that word was first learned
+         first_day_acquired_eng = age_days[ifelse(eng_acquired == 0, NA_real_,
+                                                  min(which(eng_acquired == 1), na.rm = T))],
+         first_day_acquired_fr = age_days[ifelse(fr_acquired == 0, NA_real_,
+                                                  min(which(fr_acquired == 1), na.rm = T))]
+         ) %>% 
+  fill(c(first_n_month_acquired_eng, first_n_month_acquired_fr), .direction = "downup") %>%
+  fill(c(first_month_acquired_eng, first_month_acquired_fr), .direction = "downup") %>%
+  fill(c(first_day_acquired_eng, first_day_acquired_fr), .direction = "downup") %>%
+  # next, find out in which language did they first learn a word in a pair
+  mutate(first_acquired_lang = case_when(first_month_acquired_eng == first_month_acquired_fr & !is.na(first_month_acquired_eng) & !is.na(first_month_acquired_fr) ~ "both",
+                                         first_month_acquired_eng > first_month_acquired_fr ~ "fr", 
+                                         first_month_acquired_eng < first_month_acquired_fr ~"eng",
+                                         !is.na(first_month_acquired_fr) & is.na(first_month_acquired_eng) ~ "fr",
+                                         is.na(first_month_acquired_fr) & !is.na(first_month_acquired_eng) ~ "eng",
+                                         TRUE ~ NA_character_),
+         first_acquired_n_month = case_when(first_acquired_lang == "both" ~ first_n_month_acquired_eng,
+                                            first_acquired_lang == "fr" ~ first_n_month_acquired_fr,
+                                            first_acquired_lang == "eng" ~ first_n_month_acquired_eng,
+                                            TRUE ~ NA_real_), 
+         first_acquired_month = case_when(first_acquired_lang == "both" ~ first_month_acquired_eng,
+                                          first_acquired_lang == "fr" ~ first_month_acquired_fr,
+                                          first_acquired_lang == "eng" ~ first_month_acquired_eng,
+                                          TRUE ~ NA_real_),
+         first_acquired_day = case_when(first_acquired_lang == "both" ~ first_day_acquired_eng,
+                                        first_acquired_lang == "fr" ~ first_day_acquired_fr,
+                                        first_acquired_lang == "eng" ~ first_day_acquired_eng,
+                                        TRUE ~ NA_real_)
+         ) %>%
+  # then, define the cognate language and month in which the cognate was learned
+  mutate(cognate_acquired_lang = case_when(first_month_acquired_eng == first_month_acquired_fr & !is.na(first_month_acquired_eng) & !is.na(first_month_acquired_fr) ~ "both",
+                                           first_month_acquired_eng > first_month_acquired_fr ~ "eng", 
+                                           first_month_acquired_eng < first_month_acquired_fr ~"fr",
+                                           !is.na(first_month_acquired_fr) & is.na(first_month_acquired_eng) ~ NA_character_,
+                                           is.na(first_month_acquired_fr) & !is.na(first_month_acquired_eng) ~ NA_character_,
+                                           TRUE ~ NA_character_),
+         cognate_acquired_n_month = case_when(first_acquired_lang == "both" ~ first_n_month_acquired_eng,
+                                              first_acquired_lang == "fr" ~ first_n_month_acquired_eng,
+                                              first_acquired_lang == "eng" ~ first_n_month_acquired_fr,
+                                              TRUE ~ NA_real_),
+         cognate_acquired_month = case_when(first_acquired_lang == "both" ~ first_month_acquired_eng,
+                                            first_acquired_lang == "fr" ~ first_month_acquired_eng,
+                                            first_acquired_lang == "eng" ~ first_month_acquired_fr,
+                                            TRUE ~ NA_real_),
+         cognate_acquired_day = case_when(first_acquired_lang == "both" ~ first_day_acquired_eng,
+                                          first_acquired_lang == "fr" ~ first_day_acquired_eng,
+                                          first_acquired_lang == "eng" ~ first_day_acquired_fr,
+                                          TRUE ~ NA_real_),
+         acquired_or_not = case_when(is.na(first_acquired_lang) & is.na(cognate_acquired_lang) ~ NA_character_,
+                                     !is.na(first_acquired_lang) & !is.na(cognate_acquired_lang) ~ "both",
+                                     is.na(first_acquired_lang) & !is.na(cognate_acquired_lang) | !is.na(first_acquired_lang) & is.na(cognate_acquired_lang) ~ "one")) %>%
+  # finally, calculate the interval in between when the first word and the cognate word were learned
+  mutate(interval_month = cognate_acquired_month - first_acquired_month,
+         interval_day = cognate_acquired_day - first_acquired_day,
+         rate_of_change = (cognate_acquired_month - first_acquired_month) / first_acquired_month * 100)
+
+
+# then, calculate number of word pairs in each list and mean number of word pairs contributed per infant
+
+## Complete list
+
+### number of word pairs
+total_word_pairs_full <- interval_analysis_full %>%
+  filter(acquired_or_not == "both") %>%
+  filter(first_acquired_n_month != 1) %>%
+  group_by(subject_id, cognate_status) %>%
+  distinct(word_pairs, .keep_all = T) %>%
+  #ungroup() %>%
+  #summarize(n_subj = n_distinct(subject_id),
+  #          n_word_pairs = n_distinct(word_pairs))
+  group_by(cognate_status) %>%
+  summarize(n_subj = n_distinct(subject_id),
+            n_word_pairs = n_distinct(word_pairs))
+
+### mean word pairs contributed per infant
+mean_n_word_pairs_full <- interval_analysis_full %>%
+  filter(acquired_or_not == "both") %>%
+  filter(first_acquired_n_month != 1) %>%
+  group_by(subject_id, cognate_status) %>%
+  summarize(n_word_pair = n_distinct(word_pairs)) %>%
+  group_by(cognate_status) %>%
+  summarize(mean_n_word_pair = mean(n_word_pair),
+            sd_n_word_pair = sd(n_word_pair),
+            min_n_word_pair = min(n_word_pair),
+            max_n_word_pair = max(n_word_pair))
+
+
+## Matched list
+
+### number of word pairs
+total_word_pairs_matched <- interval_analysis_matched %>%
+  filter(acquired_or_not == "both") %>%
+  filter(first_acquired_n_month != 1) %>%
+  group_by(subject_id, cognate_status) %>%
+  distinct(word_pairs, .keep_all = T) %>%
+  #ungroup() %>%
+  #summarize(n_subj = n_distinct(subject_id),
+  #          n_word_pairs = n_distinct(word_pairs))
+  group_by(cognate_status) %>%
+  summarize(n_subj = n_distinct(subject_id),
+            n_word_pairs = n_distinct(word_pairs))
+
+### mean word pairs contributed per infant
+mean_n_word_pairs_matched <- interval_analysis_matched %>%
+  filter(acquired_or_not == "both") %>%
+  filter(first_acquired_n_month != 1) %>%
+  group_by(subject_id, cognate_status) %>%
+  summarize(n_word_pair = n_distinct(word_pairs)) %>%
+  group_by(cognate_status) %>%
+  summarize(mean_n_word_pair = mean(n_word_pair),
+            sd_n_word_pair = sd(n_word_pair),
+            min_n_word_pair = min(n_word_pair),
+            max_n_word_pair = max(n_word_pair))
+
+```
+
+Similar to the main analysis, we also ran an exploratory analysis exploring whether the interval between producing a word and its translation equivalent would be shorter for cognates than for non-cognates. Following the procedure in the main paper, the analyses were limited to translation equivalent pairs that an infant learned to produce both words during the course of their participation in the current study. To fulfill such criteria, it left us with a total of `r paste(total_word_pairs_full$n_word_pairs[total_word_pairs_full$cognate_status=="cognate"] + total_word_pairs_full$n_word_pairs[total_word_pairs_full$cognate_status=="non-cognate"])` translation equivalent pairs (`r paste(total_word_pairs_full$n_word_pairs[total_word_pairs_full$cognate_status=="cognate"])` cognate and `r paste(total_word_pairs_full$n_word_pairs[total_word_pairs_full$cognate_status=="non-cognate"])` non-cognate pairs) on the complete list and `r paste(total_word_pairs_matched$n_word_pairs[total_word_pairs_matched$cognate_status=="cognate"] + total_word_pairs_matched$n_word_pairs[total_word_pairs_matched$cognate_status=="non-cognate"])` translation equivalent pairs (`r paste(total_word_pairs_matched$n_word_pairs[total_word_pairs_matched$cognate_status=="cognate"])` cognate and `r paste(total_word_pairs_matched$n_word_pairs[total_word_pairs_matched$cognate_status=="non-cognate"])` non-cognate pairs) on the matched list. On average, each infant produced `r round(mean_n_word_pairs_full$mean_n_word_pair[mean_n_word_pairs_full$cognate_status=="cognate"])` cognate pairs ($SD$ = `r round(mean_n_word_pairs_full$sd_n_word_pair[mean_n_word_pairs_full$cognate_status=="cognate"],2)`, range = `r round(mean_n_word_pairs_full$min_n_word_pair[mean_n_word_pairs_full$cognate_status=="cognate"])` – `r round(mean_n_word_pairs_full$max_n_word_pair[mean_n_word_pairs_full$cognate_status=="cognate"])`) and `r round(mean_n_word_pairs_full$mean_n_word_pair[mean_n_word_pairs_full$cognate_status=="non-cognate"])` non-cognate pairs ($SD$ = `r round(mean_n_word_pairs_full$sd_n_word_pair[mean_n_word_pairs_full$cognate_status=="non-cognate"],2)`, range = `r round(mean_n_word_pairs_full$min_n_word_pair[mean_n_word_pairs_full$cognate_status=="non-cognate"])` – `r round(mean_n_word_pairs_full$max_n_word_pair[mean_n_word_pairs_full$cognate_status=="non-cognate"])`) on the complete list, and `r round(mean_n_word_pairs_matched$mean_n_word_pair[mean_n_word_pairs_matched$cognate_status=="cognate"])` cognate pairs ($SD$ = `r round(mean_n_word_pairs_matched$sd_n_word_pair[mean_n_word_pairs_matched$cognate_status=="cognate"],2)`, range = `r round(mean_n_word_pairs_matched$min_n_word_pair[mean_n_word_pairs_matched$cognate_status=="cognate"])` – `r round(mean_n_word_pairs_matched$max_n_word_pair[mean_n_word_pairs_matched$cognate_status=="cognate"])`) and `r round(mean_n_word_pairs_matched$mean_n_word_pair[mean_n_word_pairs_matched$cognate_status=="non-cognate"])` non-cognate pairs ($SD$ = `r round(mean_n_word_pairs_matched$sd_n_word_pair[mean_n_word_pairs_matched$cognate_status=="non-cognate"],2)`, range = `r round(mean_n_word_pairs_matched$min_n_word_pair[mean_n_word_pairs_matched$cognate_status=="non-cognate"])` – `r round(mean_n_word_pairs_matched$max_n_word_pair[mean_n_word_pairs_matched$cognate_status=="non-cognate"])`) on the matched list. 
+
+A linear mixed-effects model was then run on the number of days in between when the first word of a pair was reported to have been produced and when its translation equivalent was reported to have been produced. Cognate status was entered as fixed effects (with non-cognates as the reference level), and participants and word pairs were entered as random intercepts:
+
+interval_days ~ cognate_status + (1|participant) + (1|word_pair)
+
+#### Complete List
+```{r include=FALSE, cache=TRUE}
+# mean interval (in days) to produce cognate vs. non-cognate
+mean_interval_full <- interval_analysis_full %>%
+  filter(acquired_or_not == "both") %>%
+  filter(first_acquired_n_month != 1) %>%
+  group_by(subject_id, cognate_status, word_pairs) %>%
+  distinct(interval_day, .keep_all = T) %>%
+  group_by(cognate_status, word_pairs) %>%
+  summarize(n_subj = n_distinct(subject_id),
+            mean_interval_day = mean(interval_day)) %>%
+  group_by(cognate_status) %>%
+  summarize(weight_mean_interval_day = weighted.mean(mean_interval_day, n_subj),
+            weight_sd_interval_day = matrixStats::weightedSd(mean_interval_day, n_subj),
+            min = min(mean_interval_day),
+            max = max(mean_interval_day))
+
+# lmer model
+model_interval_full <- interval_analysis_full %>%
+  filter(acquired_or_not == "both") %>%
+  filter(first_acquired_n_month != 1) %>%
+  group_by(subject_id, cognate_status, word_pairs) %>%
+  distinct(interval_month, .keep_all = T) %>%
+  mutate(cognate_status = factor(cognate_status, levels = c("non-cognate", "cognate"))) %>%
+  lmer(interval_day ~ cognate_status + (1|word_pairs) + (1|subject_id),
+       data = .)
+
+model_interval_full_coefs <- summary(model_interval_full)$coef %>%
+  as.data.frame %>%
+  rename(SE = `Std. Error`, 
+         t = `t value`,
+         p = `Pr(>|t|)`) %>%
+  mutate_at(vars(-p), round, digits = 2) %>%
+  mutate(p = case_when(p < .001 ~ "< .001",
+                       p < .01 ~ "< .01",
+                       p < .05 ~ "< .05",
+                       TRUE ~ as.character(round(p, 3))))
+
+rownames(model_interval_full_coefs) <- c("Intercept", "cognate_status") 
+
+```
+
+After having produced a word, on average, bilingual infants took `r round(mean_interval_full$weight_mean_interval_day[mean_interval_full$cognate_status=="cognate"],2)` days ($SD$ = `r round(mean_interval_full$weight_sd_interval_day[mean_interval_full$cognate_status=="cognate"],2)`, range = `r round(mean_interval_full$min[mean_interval_full$cognate_status=="cognate"])` – `r round(mean_interval_full$max[mean_interval_full$cognate_status=="cognate"])`) to produce its translation equivalent when it was a cognate and `r round(mean_interval_full$weight_mean_interval_day[mean_interval_full$cognate_status=="non-cognate"],2)` days ($SD$ = `r round(mean_interval_full$weight_sd_interval_day[mean_interval_full$cognate_status=="non-cognate"],2)`, range = `r round(mean_interval_full$min[mean_interval_full$cognate_status=="non-cognate"])` – `r round(mean_interval_full$max[mean_interval_full$cognate_status=="non-cognate"])`) to produce it when it was a non-cognate. Figure S3 Panel A visualizes this model. The effect of cognate status was statistically significant, $estimate$ = `r round(model_interval_full_coefs$Estimate[2],2)`, $SE$ = `r round(model_interval_full_coefs$SE[2],2)`, $t$ = `r round(model_interval_full_coefs$t[2],2)`, $p$ `r paste(model_interval_full_coefs$p[2])`. Therefore, the same result was observed as the one reported in the main analysis, where the interval between learning to produce a word and its translation equivalent was shorter for cognate pairs than for non-cognate pairs. 
+
+
+#### Matched List
+```{r include=FALSE, cache=TRUE}
+# mean interval (in days) to produce cognate vs. non-cognate
+mean_interval_matched <- interval_analysis_matched %>%
+  filter(acquired_or_not == "both") %>%
+  filter(first_acquired_n_month != 1) %>%
+  group_by(subject_id, cognate_status, word_pairs) %>%
+  distinct(interval_day, .keep_all = T) %>%
+  group_by(cognate_status, word_pairs) %>%
+  summarize(n_subj = n_distinct(subject_id),
+            mean_interval_day = mean(interval_day)) %>%
+  group_by(cognate_status) %>%
+  summarize(weight_mean_interval_day = weighted.mean(mean_interval_day, n_subj),
+            weight_sd_interval_day = matrixStats::weightedSd(mean_interval_day, n_subj),
+            min = min(mean_interval_day),
+            max = max(mean_interval_day))
+
+# lmer model
+model_interval_matched <- interval_analysis_matched %>%
+  filter(acquired_or_not == "both") %>%
+  group_by(subject_id, cognate_status, word_pairs) %>%
+  distinct(interval_day, .keep_all = T) %>%
+  # reverse code "cognate_status"
+  mutate(cognate_status = factor(cognate_status, levels = c("non-cognate", "cognate"))) %>%
+  lmer(interval_day ~ cognate_status + (1|word_pairs) + (1|subject_id),
+       data = .)
+
+model_interval_matched_coefs <- summary(model_interval_matched)$coef %>%
+  as.data.frame %>%
+  rename(SE = `Std. Error`, 
+         t = `t value`,
+         p = `Pr(>|t|)`) %>%
+  mutate_at(vars(-p), round, digits = 2) %>%
+  mutate(p = case_when(p < .001 ~ "< .001",
+                       p < .01 ~ "< .01",
+                       p < .05 ~ "< .05",
+                       TRUE ~ as.character(round(p, 3))))
+
+rownames(model_interval_matched_coefs) <- c("Intercept", "cognate_status") 
+
+```
+
+After having produced a word, on average, bilingual infants took `r round(mean_interval_matched$weight_mean_interval_day[mean_interval_matched$cognate_status=="cognate"],2)` days ($SD$ = `r round(mean_interval_matched$weight_sd_interval_day[mean_interval_matched$cognate_status=="cognate"],2)`, range = `r round(mean_interval_matched$min[mean_interval_matched$cognate_status=="cognate"])` – `r round(mean_interval_matched$max[mean_interval_matched$cognate_status=="cognate"])`) to produce its translation equivalent when it was a cognate and `r round(mean_interval_matched$weight_mean_interval_day[mean_interval_matched$cognate_status=="non-cognate"],2)` days ($SD$ = `r round(mean_interval_matched$weight_sd_interval_day[mean_interval_matched$cognate_status=="non-cognate"],2)`, range = `r round(mean_interval_matched$min[mean_interval_matched$cognate_status=="non-cognate"])` – `r round(mean_interval_matched$max[mean_interval_matched$cognate_status=="non-cognate"])`) to produce it when it was a non-cognate. Figure S3 Panel B visualizes this model. Once again, similar to the results for the complete list, we observed the same pattern as in the main analysis with a significant main effect of cognate status, $estimate$ = `r round(model_interval_matched_coefs$Estimate[2],2)`, $SE$ = `r round(model_interval_matched_coefs$SE[2],2)`, $t$ = `r round(model_interval_matched_coefs$t[2],2)`, $p$ `r paste(model_interval_matched_coefs$p[2])`. 
+
+
+```{r FigS3, fig.cap="Average intervals between production of the first words (light green circles) and their translation equivalent (dark blue triangles), by cognate status and age. Panel A represents the complete list and Panel B represents the matched list. Smaller individual circles and triangles plot data of the first words and translation equivalent words, respectively, from each word pair.", echo=FALSE, dpi=600, fig.align='center', fig.height=5, out.width="120%", cache = TRUE}
+
+individual_word_day_acquired_full <- interval_analysis_full %>%
+  ungroup() %>%
+  filter(acquired_or_not == "both") %>%
+  filter(first_acquired_n_month != 1) %>%
+  group_by(subject_id, cognate_status, word_pairs) %>%
+  distinct(first_acquired_day, cognate_acquired_day, .keep_all = TRUE) %>%
+  pivot_longer(c(first_acquired_day, cognate_acquired_day), names_to = "which_word", values_to = "which_day_acquired") %>%
+  mutate(which_word = recode(which_word, "first_acquired_day" = "First", "cognate_acquired_day" = "Translation equivalent"),
+         cognate_status = recode(cognate_status, "cognate" = "Cognate", "non-cognate" = "Non-cognate"),
+         cognate_status = factor(cognate_status, levels = c("Cognate", "Non-cognate"))) %>%
+  ungroup() %>%
+  group_by(cognate_status, word_pairs, which_word) %>%
+  summarize(mean_age = mean(which_day_acquired)) %>%
+  mutate(list = "Panel A: Complete list")
+
+individual_word_day_acquired_matched <- interval_analysis_matched %>%
+  ungroup() %>%
+  filter(acquired_or_not == "both") %>%
+  filter(first_acquired_n_month != 1) %>%
+  group_by(subject_id, cognate_status, word_pairs) %>%
+  distinct(first_acquired_day, cognate_acquired_day, .keep_all = TRUE) %>%
+  pivot_longer(c(first_acquired_day, cognate_acquired_day), names_to = "which_word", values_to = "which_day_acquired") %>%
+  mutate(which_word = recode(which_word, "first_acquired_day" = "First", "cognate_acquired_day" = "Translation equivalent"),
+         cognate_status = recode(cognate_status, "cognate" = "Cognate", "non-cognate" = "Non-cognate"),
+         cognate_status = factor(cognate_status, levels = c("Cognate", "Non-cognate"))) %>%
+  ungroup() %>%
+  group_by(cognate_status, word_pairs, which_word) %>%
+  summarize(mean_age = mean(which_day_acquired)) %>%
+  mutate(list = "Panel B: Matched list")
+
+individual_word_day_acquired <- rbind(individual_word_day_acquired_full, individual_word_day_acquired_matched)
+
+
+
+dumbbell_data_full <- interval_analysis_full %>%
+  mutate(list = "Panel A: Complete list")
+
+dumbbell_data_matched <- interval_analysis_matched %>%
+  mutate(list = "Panel B: Matched list")
+
+dumbbell_data <- rbind(dumbbell_data_full, dumbbell_data_matched)
+
+
+
+plot_dumbbell_interval <- dumbbell_data %>%
+  ungroup() %>%
+  filter(acquired_or_not == "both") %>%
+  filter(first_acquired_n_month != 1) %>%
+  group_by(list, subject_id, cognate_status, word_pairs) %>%
+  distinct(first_acquired_day, cognate_acquired_day, .keep_all = TRUE) %>%
+  pivot_longer(c(first_acquired_day, cognate_acquired_day), names_to = "which_word", values_to = "which_day_acquired") %>%
+  mutate(which_word = recode(which_word, "first_acquired_day" = "First", "cognate_acquired_day" = "Translation equivalent"),
+         cognate_status = recode(cognate_status, "cognate" = "Cognate", "non-cognate" = "Non-cognate"),
+         cognate_status = factor(cognate_status, levels = c("Cognate", "Non-cognate"))
+         ) %>%
+  ungroup() %>%
+  group_by(list, cognate_status, which_word) %>%
+  summarize(mean_age = mean(which_day_acquired)) %>%
+  ggplot(aes(x = mean_age, y = forcats::fct_rev(cognate_status))) +
+  #geom_point(data = individual_word_month_acquired, aes(x = mean_age, #y = word_pairs, 
+  #                                                      color = which_word), shape = 23, alpha = 0.3) +
+  geom_jitter(data = individual_word_day_acquired, aes(x = mean_age, # y = word_pairs, 
+                                                       color = which_word,
+                                                       shape = which_word),
+              size = 2, stroke = 1, width = 0.1, alpha = .45) +
+  #geom_point(aes(shape = which_word, fill = NA), size = 10, stroke = 3) + # black border
+  geom_line(size = 2) +
+  geom_point(aes(fill = which_word, shape = which_word), color = "black", stroke = 2,
+             size = 5) +
+  scale_fill_manual(values=c("#a6d96a", "#225ea8")) +
+  scale_shape_manual(values=c(21, 24)) + 
+  scale_color_manual(values=c("#a6d96a", "#225ea8")) +
+  labs(x = "\n Age (in days)", 
+       y = "",
+       color = "Which word",
+       shape = "Which word",
+       fill = "Which word") + 
+  xlim(550, 800) +
+  theme_minimal() +
+  facet_grid(col = vars(list)) +
+  theme(text = element_text(size=12),
+        strip.text.x = element_text(size = 12),
+        axis.text.y = element_text(size = 12),
+        legend.text = element_text(size = 12),
+        legend.position = "bottom",
+        panel.spacing = unit(1.5, "lines")) 
+
+plot_dumbbell_interval
+
+```
+
+### Summary of Analyses
+Overall, the result patterns observed here with the more stringent language exposure criterion were consistent with those reported in the main analysis. This suggests that the cognate effect we observed in our pre-registered analysis was robust across different language exposure inclusion criteria.

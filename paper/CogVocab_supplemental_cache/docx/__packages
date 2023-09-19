@@ -15,6 +15,7 @@ purrr
 dplyr
 stringr
 forcats
+lubridate
 tidylog
 wordbankr
 matrixStats
